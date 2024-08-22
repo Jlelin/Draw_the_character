@@ -24,12 +24,12 @@ public class observarmira : NetworkBehaviour
     void Start()
     {
         // Define a rotação inicial do guerreiro principal para olhar para a direita
-        for (int i = 0; i < warrior_function.guerreiro.Length; i++)
+        for (int i = 0; i < warriorfunction.guerreiros.Length; i++)
         {
-            guerreirocinemachine = warrior_function.guerreiro[i].transform;
+            guerreirocinemachine = warriorfunction.guerreiros[i].transform;
             if (warriorfunction.cinemachinecamera.Follow == guerreirocinemachine)
             {
-                guerreiroPrincipal = warrior_function.guerreiro[i].transform;
+                guerreiroPrincipal = warriorfunction.guerreiros[i].transform;
 
                 // Define a rotação inicial para olhar para a direita
                 guerreiroPrincipal.rotation = Quaternion.Euler(new Vector3(0, 0, -90)); // Olhando para a direita

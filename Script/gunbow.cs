@@ -39,15 +39,15 @@ public class gunbow : NetworkBehaviour, IPointerDownHandler, IPointerUpHandler
                 Touch touch = Input.GetTouch(0);
                 contador++;
                 // Define a posição da mira e ativa ela após um frame
-                for (int i = 0; i < warrior_function.guerreiro.Length; i++)
+                for (int i = 0; i < warriorfunction.guerreiros.Length; i++)
                 {
-                    warrior_function.guerreirosID.Value = warrior_function.guerreiro[i].GetComponent<NetworkObject>().NetworkObjectId;
+                    warrior_function.guerreirosID.Value = warriorfunction.guerreiros[i].GetComponent<NetworkObject>().NetworkObjectId;
                     guerreirodowarriorfunction = NetworkManager.Singleton.SpawnManager.SpawnedObjects[warrior_function.guerreirosID.Value];
                     movimento = guerreirodowarriorfunction.GetComponent<movimentar>();
                     if (movimento.enabled == true)
                     {
                         movimento.enabled = false;
-                        guerreiro = warrior_function.guerreiro[i].transform.position;
+                        guerreiro = warriorfunction.guerreiros[i].transform.position;
                         miras = guerreiro;
                         mira.transform.position = miras; // Define a posição da mira
                         
@@ -65,10 +65,10 @@ public class gunbow : NetworkBehaviour, IPointerDownHandler, IPointerUpHandler
                 Touch touch = Input.GetTouch(0);
                 contador = 0;
                 mira.SetActive(false);
-                for (int i = 0; i < warrior_function.guerreiro.Length; i++)
+                for (int i = 0; i < warriorfunction.guerreiros.Length; i++)
                 {
-                    guerreirocinemachine = warrior_function.guerreiro[i].transform;
-                    warrior_function.guerreirosID.Value = warrior_function.guerreiro[i].GetComponent<NetworkObject>().NetworkObjectId;
+                    guerreirocinemachine = warriorfunction.guerreiros[i].transform;
+                    warrior_function.guerreirosID.Value = warriorfunction.guerreiros[i].GetComponent<NetworkObject>().NetworkObjectId;
                     guerreirodowarriorfunction = NetworkManager.Singleton.SpawnManager.SpawnedObjects[warrior_function.guerreirosID.Value];
                     if (warriorfunction.cinemachinecamera.Follow == guerreirocinemachine)
                     {

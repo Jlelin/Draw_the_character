@@ -5,27 +5,33 @@ using UnityEngine.UI;
 using System;
 using Unity.Netcode;
 using System.Linq;
+using System.Collections.Generic;
 
 
 public class DragCentralButton : NetworkBehaviour, IPointerDownHandler, IPointerUpHandler, IDragHandler
 {
+    public NetworkVariable<ulong> warriorfatherdoclienteID = new NetworkVariable<ulong>();
     public NetworkVariable<ulong> guerreiroID = new NetworkVariable<ulong>();
+    public NetworkVariable<ulong> guerreiroInstanciadoID = new NetworkVariable<ulong>(0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
     public NetworkVariable<ulong> avoID = new NetworkVariable<ulong>();
+    public NetworkVariable<ulong> balaoID = new NetworkVariable<ulong>();
+    public DragCentralButton[] instanciasderede;
+    public GameObject[] todosobjetos, pergaminhosdesenrolados, jogadores;
     public observarmira observarmira;
-    public static int indices = 0;
+    public static int indices = 0, indicescliente = 0;
     private bool isButtonPressed = false;
     private int maisumguerreiro;
-    public static int tamanho;
+    public static int tamanho, tamanhocliente;
     private Vector3 scaleNormal = Vector3.one; // Escala normal do botão
-    private Coroutine shrinkCoroutine; // Referência para a coroutine de diminuição
+    private Coroutine shrinkCoroutine;
     private Vector3 offset, posicao_botaodesenho;
     private RectTransform position;
-    public GameObject[] guerreiros, baloes; // Arrays de guerreiros e baloes
+    public GameObject[] guerreiros, baloes, filhosdemascarapergaminho;
     public GameObject warriorsParent;
-    public static GameObject paiinstanciado, guerreiroInstanciado; // Pai dos guerreiros
+    public static GameObject paiinstanciado, guerreiroInstanciado; 
     public GameObject mask, escudoespada, arcoflecha, desarmado, armado, pergaminho_enrolado, desenrolado; // Objetos relacionados
     public GameObject left, right, select_, warrior, focus, joystick, botaodedesenho, canvas, camaracharacter, xzinho;
-    public GameObject ataquebutton, mira, playerprefab;
+    public GameObject ataquebutton, mira, playerprefab, balaoInstanciado;
     public static GameObject mirainstance;
     public static NetworkObject instanciaguerreiro, instanciamira, instanciarpai;
     public botaodesenho desenho;
@@ -33,8 +39,9 @@ public class DragCentralButton : NetworkBehaviour, IPointerDownHandler, IPointer
     public qual_guerreirodireito guerreirodireito;
     public warrior_function warriorfunction;
     public sowrdshieldfight escudoespadaluta;
-    public NetworkObject instanciajogador, jogador;
+    public NetworkObject jogador;
     public int tamanhototal  = 0;
+    private string tagCentral;
 
     [Header("Scale Settings")]
     public float scaleDuration = 2f; // Duração da animação de escala
@@ -52,7 +59,7 @@ public class DragCentralButton : NetworkBehaviour, IPointerDownHandler, IPointer
     {
         guerreiroesquerdo = FindFirstObjectByType<qual_guerreiro>();
         guerreirodireito = FindFirstObjectByType<qual_guerreirodireito>();
-        desenho =FindFirstObjectByType<botaodesenho>();
+        desenho = FindFirstObjectByType<botaodesenho>();
         warriorfunction = FindFirstObjectByType<warrior_function>();
         position = desenho.GetComponent<RectTransform>();
         posicao_botaodesenho = position.position;
@@ -68,35 +75,24 @@ public class DragCentralButton : NetworkBehaviour, IPointerDownHandler, IPointer
 
     void Update()
     {
-        if (paiinstanciado == null)
+        GameObject jogadorobject = jogador.gameObject;
+        if (!jogadorobject.transform.Find("warrior's father(Clone)"))
         {
-            paiinstanciado = Instantiate(warriorsParent);
-            instanciarpai = paiinstanciado.GetComponent<NetworkObject>();
             if(IsServer)
             {
+                paiinstanciado = Instantiate(warriorsParent);
+                paiinstanciado.transform.position = new Vector3(0, 0, 0);
+                instanciarpai = paiinstanciado.GetComponent<NetworkObject>();
                 instanciarpai.Spawn();
             }
-            instanciajogador = jogador.GetComponentInParent<NetworkObject>();
-
-            if (instanciajogador.IsSpawned)
+            else if(IsClient)
             {
-                // Garantir que paiinstanciado já está inicializado
-                if (jogador.transform != null)
-                {
-                    if(IsServer)
-                    {
-                        paiinstanciado.transform.SetParent(jogador.transform, true);
-                        avoID.Value = jogador.GetComponent<NetworkObject>().NetworkObjectId;
-                    }
-                }
-                else
-                {
-                    Debug.LogError("Transform de paiinstanciado é nulo.");
-                }
+                warriorfatherhaveafatherServerRpc();
             }
-            else
+            if(IsServer)
             {
-                Debug.LogError("O objeto 'jogador(Clone)' não foi encontrado na cena.");
+                paiinstanciado.transform.SetParent(jogador.transform, false);
+                avoID.Value = jogador.GetComponent<NetworkObject>().NetworkObjectId;
             }
         }
         if (isButtonPressed)
@@ -202,7 +198,6 @@ public class DragCentralButton : NetworkBehaviour, IPointerDownHandler, IPointer
         float score = CalculateScore();
         totalScore += score; // Acumula a pontuação total
         transform.localScale = scaleNormal;
-        Debug.Log("Pontuação atual: " + score + ", Pontuação total: " + totalScore);
 
         // Resetar a variável de controle de instância
         hasInstantiated = true;
@@ -254,11 +249,10 @@ public class DragCentralButton : NetworkBehaviour, IPointerDownHandler, IPointer
     {
         transform.localScale = scaleNormal;
 
-        Vector3 fixedPosition = new Vector3(-17.07498f, -0.3627518f, 0.304258f);
+        Vector3 fixedPosition = new Vector3(-11.83f, 0.6f, 0.5042808f);
 
-        string tagCentral = transform.tag;
-
-        GameObject balaoInstanciado = null;
+        tagCentral = transform.tag;
+        balaoInstanciado = null;
 
         foreach (GameObject guerreiro in guerreiros)
         {
@@ -269,59 +263,73 @@ public class DragCentralButton : NetworkBehaviour, IPointerDownHandler, IPointer
                     NetworkObject objrede = obj.GetComponent<NetworkObject>();
                     if(objrede.OwnerClientId == NetworkManager.Singleton.LocalClientId)
                     {
-                        guerreiroInstanciado = Instantiate(guerreiro, fixedPosition, Quaternion.identity, paiinstanciado.transform);
-                        instanciaguerreiro = guerreiroInstanciado.GetComponent<NetworkObject>();
-                        if (NetworkManager.Singleton.SpawnManager.SpawnedObjects.TryGetValue(avoID.Value, out var networkObject))
+                        if(IsClient && !IsHost)
                         {
-                            var avo = networkObject;
-                            instanciaguerreiro.SpawnWithOwnership(avo.OwnerClientId);
+                            if(instanciarpai == null)
+                            {
+                                if(NetworkManager.Singleton.SpawnManager.SpawnedObjects.TryGetValue(warriorfatherdoclienteID.Value, out var warriorfathernetworkObject))
+                                {
+                                    instanciarpai = warriorfathernetworkObject;
+                                }
+                            }
+                            if(instanciarpai != null)
+                            {
+                                if(instanciarpai.IsSpawned)
+                                {
+                                    paiinstanciado = instanciarpai.gameObject;
+                                    instanciadeguerreirosServerRpc(fixedPosition);
+                                    
+                                }
+                            }
                         }
                         if(IsServer)
                         {
+                            guerreiroInstanciado = Instantiate(guerreiro, fixedPosition, Quaternion.identity, paiinstanciado.transform);
+                            instanciaguerreiro = guerreiroInstanciado.GetComponent<NetworkObject>();
+                            if (NetworkManager.Singleton.SpawnManager.SpawnedObjects.TryGetValue(avoID.Value, out var networkObject))
+                            {
+                                var avo = networkObject;
+                                instanciaguerreiro.SpawnWithOwnership(avo.OwnerClientId);
+                            }
                             guerreiroID.Value = instanciaguerreiro.NetworkObjectId;
                             valoresdoguerreirobrancoClientRpc(guerreiroID.Value, fixedPosition, avoID.Value);
-                        }
-                        if (ataquebutton != null && instanciaguerreiro.CompareTag("escudo_espada"))
-                        {
-                            sowrdshieldfight scriptataqueespada = instanciaguerreiro.GetComponent<sowrdshieldfight>();
-                            scriptataqueespada.ataquebutton = ataquebutton;
-                        }
-                        if (instanciaguerreiro != null && instanciaguerreiro.CompareTag("escudo_espada"))
-                        {
-                            escudoespadaluta = instanciaguerreiro.GetComponent<sowrdshieldfight>();
-                            escudoespadaluta.ataquebutton = ataquebutton;
-                        }
-                        instanciaguerreiro.transform.SetParent(instanciarpai.transform, false);
-                        instanciaguerreiro.transform.position = fixedPosition;
-                        Debug.Log(instanciaguerreiro);
-                    }
-                }
-                if(instanciaguerreiro.CompareTag("arqueiro") || instanciaguerreiro.CompareTag("armafogo"))
-                {
-                    foreach(GameObject obj in GameObject.FindGameObjectsWithTag("Player"))
-                    {
-                        mirainstance = Instantiate(mira);
-                        instanciamira = mirainstance.GetComponent<NetworkObject>();
-                        NetworkObject objrede = obj.GetComponent<NetworkObject>();
-                        if(objrede.OwnerClientId == NetworkManager.Singleton.LocalClientId)
-                        {
-                            instanciamira.SpawnWithOwnership(objrede.OwnerClientId);
-                            instanciamira.transform.SetParent(objrede.transform, true);    
-                        }
-                        if(instanciaguerreiro.CompareTag("arqueiro") || instanciaguerreiro.CompareTag("armafogo"))
-                        {
-                            instanciamira.GetComponent<movimentar>().mover = joystick.GetComponent<FixedJoystick>();
-                            observarmira = instanciaguerreiro.GetComponent<observarmira>();
-                            observarmira.mira = mira;
-                        }
-                        if (mira != null)
-                        {
-                            movimentar movimento = instanciaguerreiro.GetComponent<movimentar>();
-                            movimento.miraId.Value = mira.GetComponent<NetworkObject>().NetworkObjectId;
+                            if (ataquebutton != null && instanciaguerreiro.CompareTag("guerreiroescudoespada"))
+                            {
+                                sowrdshieldfight scriptataqueespada = instanciaguerreiro.GetComponent<sowrdshieldfight>();
+                                scriptataqueespada.ataquebutton = ataquebutton;
                             }
+                            if (instanciaguerreiro != null && instanciaguerreiro.CompareTag("guerreiroescudoespada"))
+                            {
+                                escudoespadaluta = instanciaguerreiro.GetComponent<sowrdshieldfight>();
+                                escudoespadaluta.ataquebutton = ataquebutton;
+                            }
+                            instanciaguerreiro.transform.SetParent(instanciarpai.transform, false);
+                            instanciaguerreiro.transform.position = fixedPosition;
+                            if(instanciaguerreiro.CompareTag("guerreiroarqueiro") || instanciaguerreiro.CompareTag("guerreirosniper"))
+                            {
+                                mirainstance = Instantiate(mira);
+                                instanciamira = mirainstance.GetComponent<NetworkObject>();
+                                objrede = obj.GetComponent<NetworkObject>();
+                                if(objrede.OwnerClientId == NetworkManager.Singleton.LocalClientId)
+                                {
+                                    instanciamira.SpawnWithOwnership(objrede.OwnerClientId);
+                                    instanciamira.transform.SetParent(objrede.transform, true);    
+                                }
+                                if(instanciaguerreiro.CompareTag("guerreiroarqueiro") || instanciaguerreiro.CompareTag("guerreirosniper"))
+                                {
+                                    instanciamira.GetComponent<movimentar>().mover = joystick.GetComponent<FixedJoystick>();
+                                    observarmira = instanciaguerreiro.GetComponent<observarmira>();
+                                    observarmira.mira = mira;
+                                }
+                                if (mira != null)
+                                {
+                                    movimentar movimento = instanciaguerreiro.GetComponent<movimentar>();
+                                    movimento.miraId.Value = mira.GetComponent<NetworkObject>().NetworkObjectId;
+                                }
+                            }
+                        }
                     }
                 }
-                // Garante que o guerreiro é filho do warriorsParent após o Spawn
                 break;
             }
         }
@@ -330,35 +338,69 @@ public class DragCentralButton : NetworkBehaviour, IPointerDownHandler, IPointer
         {
             if (balao.CompareTag(tagCentral))
             {
-                // Instancia o balão como filho de warriorsParent
-                balaoInstanciado = Instantiate(balao, fixedPosition, Quaternion.identity, paiinstanciado.transform);
-
-                if (guerreiroesquerdo.balao[0] != null)
+                if(IsClient && !IsHost)
                 {
-                    Array.Resize(ref guerreiroesquerdo.balao, guerreiroesquerdo.balao.Length + 1);
-                    tamanhototal = guerreiroesquerdo.balao.Length - 1;
+                    jogadores = GameObject.FindGameObjectsWithTag("Player");
+                    foreach(var jogadorlocal in jogadores)
+                    {
+                        instanciarpai = jogadorlocal.transform.Find("warrior's father(Clone)").GetComponent<NetworkObject>();
+                        if (instanciarpai.OwnerClientId == NetworkManager.Singleton.LocalClientId)
+                        {
+                            balaoInstanciado = Instantiate(balao, fixedPosition, Quaternion.identity, instanciarpai.transform);
+                        }
+                    }
+                    if (guerreiroesquerdo.balao[0] != null)
+                    {
+                        Array.Resize(ref guerreiroesquerdo.balao, guerreiroesquerdo.balao.Length + 1);
+                        tamanhototal = guerreiroesquerdo.balao.Length - 1;
+                    }
+                    guerreiroesquerdo.balao[tamanhototal] = balaoInstanciado;
+                    guerreiroesquerdo.balao_atualizar();
+                    balaoInstanciado.transform.position = fixedPosition;
+                    botoes_pergaminho.botaocentral.transform.position = botoes_pergaminho.originalscale;
+                    left.SetActive(true);
+                    right.SetActive(true);
+                    select_.SetActive(true);
+                    warrior.SetActive(true);
+                    joystick.SetActive(true);
+                    botaodedesenho.SetActive(true);
+                    pergaminho_enrolado.SetActive(false);
+                    desenrolado.SetActive(false);
+                    break;
                 }
-                guerreiroesquerdo.balao[tamanhototal] = balaoInstanciado;
-                guerreiroesquerdo.balao_atualizar();
-                break;
+                if(IsServer)
+                {
+                    balaoInstanciado = Instantiate(balao, fixedPosition, Quaternion.identity, paiinstanciado.transform);
+
+                    if (guerreiroesquerdo.balao[0] != null)
+                    {
+                        Array.Resize(ref guerreiroesquerdo.balao, guerreiroesquerdo.balao.Length + 1);
+                        tamanhototal = guerreiroesquerdo.balao.Length - 1;
+                    }
+                    guerreiroesquerdo.balao[tamanhototal] = balaoInstanciado;
+                    guerreiroesquerdo.balao_atualizar();
+                    break;
+                }
             }
         }
 
-        // Atualizar arrays e referências
-        tamanho++;
-        Array.Resize(ref warriorfunction.guerreiros, tamanho);
-        maisumguerreiro = warriorfunction.guerreiros.Length - 1;
-        warriorfunction.guerreiros[maisumguerreiro] = guerreiroInstanciado;
-        maisumguerreiro++;
-        warrior_function.guerreiro = warriorfunction.guerreiros;
-        if (warriorfunction.guerreiros[indices] != null)
+        
+        if(IsServer)
         {
-            if (warriorfunction.guerreiros.Length - 1 > indices)
+            tamanho++;
+            Array.Resize(ref warriorfunction.guerreiros, tamanho);
+            maisumguerreiro = warriorfunction.guerreiros.Length - 1;
+            warriorfunction.guerreiros[maisumguerreiro] = guerreiroInstanciado;
+            maisumguerreiro++;
+            if (warriorfunction.guerreiros[indices] != null)
             {
-                indices++;
+                if (warriorfunction.guerreiros.Length - 1 > indices)
+                {
+                    indices++;
+                }
             }
-        }
 
+        }
         if (guerreiroInstanciado == null || balaoInstanciado == null)
         {
             Debug.LogWarning("Não foi possível encontrar guerreiro ou balão com a tag do botão central.");
@@ -375,17 +417,29 @@ public class DragCentralButton : NetworkBehaviour, IPointerDownHandler, IPointer
             botaodedesenho.SetActive(true);
             pergaminho_enrolado.SetActive(false);
             desenrolado.SetActive(false);
-
-            // Configurar o balão e guerreiro instanciado
-            Balao balaoScript = balaoInstanciado.GetComponent<Balao>();
-            if (balaoScript != null)
+            if(IsClient && !IsHost)
             {
-                balaoScript.guerreiro = guerreiroInstanciado.transform;
-                balaoScript.diferencaInicial = new Vector3(-1.18f, 1.008f, 0);
+                Balao balaoScript = balaoInstanciado.GetComponent<Balao>();
+                if (balaoScript != null)
+                {
+                    if (NetworkManager.Singleton.SpawnManager.SpawnedObjects.TryGetValue(guerreiroInstanciadoID.Value, out var guerreiroInstanciadonetworkobject))
+                    balaoScript.guerreiro = guerreiroInstanciadonetworkobject.transform;
+                    balaoScript.diferencaInicial = new Vector3(-1.18f, 1.008f, 0);
+                }
             }
             else
             {
-                Debug.LogWarning("O balão instanciado não possui o componente BalaoScript.");
+                // Configurar o balão e guerreiro instanciado
+                Balao balaoScript = balaoInstanciado.GetComponent<Balao>();
+                if (balaoScript != null)
+                {
+                    balaoScript.guerreiro = guerreiroInstanciado.transform;
+                    balaoScript.diferencaInicial = new Vector3(-1.18f, 1.008f, 0);
+                }
+                else
+                {
+                    Debug.LogWarning("O balão instanciado não possui o componente BalaoScript.");
+                }
             }
         }
     }
@@ -404,7 +458,7 @@ public class DragCentralButton : NetworkBehaviour, IPointerDownHandler, IPointer
         instanciaguerreiro = guerreiroInstanciado.GetComponent<NetworkObject>();
         if(IsServer)
         {
-            guerreiroInstanciado.transform.SetParent(instanciarpai.transform, true);
+            guerreiroInstanciado.transform.SetParent(instanciarpai.transform, false);
         }
         FixedJoystick fixedJoystick = joystick.GetComponent<FixedJoystick>();
         if (fixedJoystick != null)
@@ -413,11 +467,118 @@ public class DragCentralButton : NetworkBehaviour, IPointerDownHandler, IPointer
             if (guerreiroScript != null)
             {
                 guerreiroScript.mover = fixedJoystick;
+                guerreiroScript.enabled = false;
                 instanciaguerreiro.enabled = false;
                 guerreiroInstanciado.SetActive(false);
             }
         }
     }
+
+    [ClientRpc]
+    private void guerreirosdewarriorfunctionClientRpc(ulong guerreiroInstanciadoID)
+    {
+        if (NetworkManager.Singleton.SpawnManager.SpawnedObjects.TryGetValue(guerreiroInstanciadoID, out var guerreiroInstanciadonetwork))
+        {
+            tamanhocliente++;
+            Array.Resize(ref warriorfunction.guerreiros, tamanhocliente);
+            maisumguerreiro = warriorfunction.guerreiros.Length - 1;
+            var newguerreiroInstanciado = guerreiroInstanciadonetwork.gameObject;
+            warriorfunction.guerreiros[maisumguerreiro] = newguerreiroInstanciado;
+            maisumguerreiro++;
+            if (warriorfunction.guerreiros[indicescliente] != null)
+            {
+                if (warriorfunction.guerreiros.Length - 1 > indicescliente)
+                {
+                    indicescliente++;
+                }
+            }
+        }
+    }
+
+    [ServerRpc]
+    private void warriorfatherhaveafatherServerRpc()
+    {
+        todosobjetos = FindObjectsOfType<GameObject>(true);
+        foreach(GameObject objeto in todosobjetos)
+        {
+            if(objeto.CompareTag("desenrolado"))
+            {
+                if(!objeto.activeSelf)
+                {
+                    objeto.SetActive(true);
+                }
+            }
+        }
+        pergaminhosdesenrolados = todosobjetos.Where(obj => obj.CompareTag("desenrolado")).ToArray();
+        foreach(GameObject desenrolado in pergaminhosdesenrolados)
+        {
+            if(desenrolado.activeSelf)
+            {
+                GameObject[] jogadores = todosobjetos.Where(obj => obj.CompareTag("Player")).ToArray();
+                foreach(GameObject jogador in jogadores)
+                {
+                    if (!jogador.transform.Find("warrior's father(Clone)"))
+                    {
+                        paiinstanciado = Instantiate(warriorsParent);
+                        paiinstanciado.transform.position = new Vector3(0, 0, 0);
+                        instanciarpai = paiinstanciado.GetComponent<NetworkObject>();
+                    }
+                    if(instanciarpai != null)
+                    {
+                        if(!instanciarpai.IsSpawned)
+                        {
+                            avoID.Value = jogador.GetComponent<NetworkObject>().NetworkObjectId;
+                            if (NetworkManager.Singleton.SpawnManager.SpawnedObjects.TryGetValue(avoID.Value, out var networkObjectavo))
+                            {
+                                instanciarpai.SpawnWithOwnership(networkObjectavo.OwnerClientId);
+                                warriorfatherdoclienteID.Value = instanciarpai.NetworkObjectId;
+                            }
+                        }
+                    }
+                    if (NetworkManager.Singleton.SpawnManager.SpawnedObjects.TryGetValue(avoID.Value, out var networkObject))
+                    {
+                        paiinstanciado.transform.SetParent(networkObject.transform, true);
+                    }
+                }
+                desenrolado.SetActive(false);
+            }
+        }
+    }
+
+    [ServerRpc]
+    private void instanciadeguerreirosServerRpc(Vector3 fixedPosition, ServerRpcParams rpcParams = default)
+    {
+        ulong clientId = rpcParams.Receive.SenderClientId;
+        jogadores = GameObject.FindGameObjectsWithTag("Player");
+        foreach(var jogadorlocal in jogadores)
+        {
+            var jogadorlocalnetwork = jogadorlocal.GetComponent<NetworkObject>();
+            if (clientId == jogadorlocalnetwork.OwnerClientId)
+            {
+                foreach (GameObject guerreiro in guerreiros)
+                {
+                    tagCentral = transform.tag;
+                    if (guerreiro.CompareTag(tagCentral))
+                    {
+                        guerreiroInstanciado = Instantiate(guerreiro, fixedPosition, Quaternion.identity, paiinstanciado.transform);
+                        instanciaguerreiro = guerreiroInstanciado.GetComponent<NetworkObject>();
+                        if (NetworkManager.Singleton.SpawnManager.SpawnedObjects.TryGetValue(avoID.Value, out var avonetworkobject))
+                        {
+                            instanciaguerreiro.SpawnWithOwnership(avonetworkobject.OwnerClientId);
+                            instanciarpai = jogadorlocal.transform.Find("warrior's father(Clone)").GetComponent<NetworkObject>();
+                            if(instanciarpai.OwnerClientId == clientId)
+                            {
+                                instanciaguerreiro.transform.SetParent(instanciarpai.transform, false);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        guerreirosdewarriorfunctionClientRpc(instanciaguerreiro.NetworkObjectId);
+    }
+
+
 
 
 

@@ -54,22 +54,22 @@ public class qual_guerreiro : MonoBehaviour
                         receberbalao_vermelho = balao[balao_selecionado].GetComponent<SpriteRenderer>();
                         for(int baloes = 0; baloes < balao_diferentesguerreiros.Length; baloes++)
                         {
-                            if(balao[balao_selecionado].CompareTag("escudo_espada") && balao_diferentesguerreiros_vetor[baloes].CompareTag("escudo_espada"))
+                            if(balao[balao_selecionado].CompareTag("guerreiroescudoespada") && balao_diferentesguerreiros_vetor[baloes].CompareTag("guerreiroescudoespada"))
                             {
                                 receberbalao_vermelho.sprite = balao_diferentesguerreiros[baloes];
                                 guardarbaloes = balao_selecionado;
                             }
-                            if(balao[balao_selecionado].CompareTag("armafogo") && balao_diferentesguerreiros_vetor[baloes].CompareTag("armafogo"))
+                            if(balao[balao_selecionado].CompareTag("guerreirosniper") && balao_diferentesguerreiros_vetor[baloes].CompareTag("guerreirosniper"))
                             {
                                 receberbalao_vermelho.sprite = balao_diferentesguerreiros[baloes];
                                 guardarbaloes = balao_selecionado;
                             }
-                            if(balao[balao_selecionado].CompareTag("desarmado") && balao_diferentesguerreiros_vetor[baloes].CompareTag("desarmado"))
+                            if(balao[balao_selecionado].CompareTag("guerreirodesarmado") && balao_diferentesguerreiros_vetor[baloes].CompareTag("guerreirodesarmado"))
                             {
                                 receberbalao_vermelho.sprite = balao_diferentesguerreiros[baloes];
                                 guardarbaloes = balao_selecionado;
                             }
-                            if(balao[balao_selecionado].CompareTag("arqueiro") && balao_diferentesguerreiros_vetor[baloes].CompareTag("arqueiro"))
+                            if(balao[balao_selecionado].CompareTag("guerreiroarqueiro") && balao_diferentesguerreiros_vetor[baloes].CompareTag("guerreiroarqueiro"))
                             {
                                 receberbalao_vermelho.sprite = balao_diferentesguerreiros[baloes];
                                 guardarbaloes = balao_selecionado;
@@ -95,22 +95,22 @@ public class qual_guerreiro : MonoBehaviour
                         receberbalao_vermelho = balao[balao_selecionado].GetComponent<SpriteRenderer>();
                         for(int baloes = 0; baloes < balao_diferentesguerreiros.Length; baloes++)
                         {
-                            if(balao[balao_selecionado].CompareTag("escudo_espada") && balao_diferentesguerreiros_vetor[baloes].CompareTag("escudo_espada"))
+                            if(balao[balao_selecionado].CompareTag("guerreiroescudoespada") && balao_diferentesguerreiros_vetor[baloes].CompareTag("guerreiroescudoespada"))
                             {
                                 receberbalao_vermelho.sprite = balao_diferentesguerreiros[baloes];
                                 guardarbaloes = balao_selecionado;
                             }
-                            if(balao[balao_selecionado].CompareTag("armafogo") && balao_diferentesguerreiros_vetor[baloes].CompareTag("armafogo"))
+                            if(balao[balao_selecionado].CompareTag("guerreirosniper") && balao_diferentesguerreiros_vetor[baloes].CompareTag("guerreirosniper"))
                             {
                                 receberbalao_vermelho.sprite = balao_diferentesguerreiros[baloes];
                                 guardarbaloes = balao_selecionado;
                             }
-                            if(balao[balao_selecionado].CompareTag("desarmado") && balao_diferentesguerreiros_vetor[baloes].CompareTag("desarmado"))
+                            if(balao[balao_selecionado].CompareTag("guerreirodesarmado") && balao_diferentesguerreiros_vetor[baloes].CompareTag("guerreirodesarmado"))
                             {
                                 receberbalao_vermelho.sprite = balao_diferentesguerreiros[baloes];
                                 guardarbaloes = balao_selecionado;
                             }
-                            if(balao[balao_selecionado].CompareTag("arqueiro") && balao_diferentesguerreiros_vetor[baloes].CompareTag("arqueiro"))
+                            if(balao[balao_selecionado].CompareTag("guerreiroarqueiro") && balao_diferentesguerreiros_vetor[baloes].CompareTag("guerreiroarqueiro"))
                             {
                                 receberbalao_vermelho.sprite = balao_diferentesguerreiros[baloes];
                                 guardarbaloes = balao_selecionado;
@@ -127,19 +127,19 @@ public class qual_guerreiro : MonoBehaviour
                                 if(quero_balaobranco.sprite != balao_branco && quero_balaobranco.sprite != balaobrancoarmado &&
                                 quero_balaobranco.sprite != balaobrancodesarmado && quero_balaobranco.sprite != balaoarqueiro)
                                 {
-                                    if(balao[o].CompareTag("escudo_espada"))
+                                    if(balao[o].CompareTag("guerreiroescudoespada"))
                                     {
                                         quero_balaobranco.sprite = balao_branco;
                                     }
-                                    if(balao[o].CompareTag("armafogo"))
+                                    if(balao[o].CompareTag("guerreirosniper"))
                                     {
                                         quero_balaobranco.sprite = balaobrancoarmado;
                                     }
-                                    if(balao[o].CompareTag("desarmado"))
+                                    if(balao[o].CompareTag("guerreirodesarmado"))
                                     {
                                         quero_balaobranco.sprite = balaobrancodesarmado;
                                     }
-                                    if(balao[o].CompareTag("arqueiro"))
+                                    if(balao[o].CompareTag("guerreiroarqueiro"))
                                     {
                                         quero_balaobranco.sprite = balaoarqueiro;
                                     }

@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.Netcode;
@@ -10,6 +11,8 @@ public class movimentar : NetworkBehaviour
     public NetworkVariable<ulong> moverid = new NetworkVariable<ulong>();
     private movimentar movimento;  // Referência local ao script 'movimentar'
     public Joystick mover; // Atualize para Joystick
+    public GameObject[] instanciadeguerreiros, jogadores;
+    public Transform warriorfathertransform;
     public Rigidbody2D corpo_rigido;
     public float velocidade, velocidadeRotacao;
     public float graus; // Variável para armazenar o valor de rotação
@@ -29,16 +32,8 @@ public class movimentar : NetworkBehaviour
         // Verifique se o NetworkManager está ativo e se o instanciaguerreiro está definido
         if (NetworkManager.Singleton == null || DragCentralButton.instanciaguerreiro == null) return;
 
-        // Verifique se o instanciaguerreiro tem um NetworkObject antes de acessar seu OwnerClientId
-        NetworkObject guerreiroNetworkObject = DragCentralButton.instanciaguerreiro.GetComponent<NetworkObject>();
-
-        if (guerreiroNetworkObject == null) return;
-
-        // Continue apenas se o LocalClientId for igual ao OwnerClientId do guerreiro
-        if (NetworkManager.Singleton.LocalClientId != guerreiroNetworkObject.OwnerClientId) return;
-
         // Verifique se a mira também está definida e tem um NetworkObject antes de continuar
-        if (DragCentralButton.instanciamira != null)
+        /*if (DragCentralButton.instanciamira != null)
         {
             NetworkObject miraNetworkObject = DragCentralButton.instanciamira.GetComponent<NetworkObject>();
 
@@ -46,21 +41,42 @@ public class movimentar : NetworkBehaviour
             {
                 if (NetworkManager.Singleton.LocalClientId != miraNetworkObject.OwnerClientId) return;
             }
-        }
-
-        // Agora execute a movimentação e rotação, uma vez que todas as verificações foram feitas
-        if (DragCentralButton.instanciaguerreiro.GetComponent<movimentar>().enabled == true)
+        }*/
+        jogadores = GameObject.FindGameObjectsWithTag("Player");
+        foreach(GameObject jogador in jogadores)
         {
-            mover_character();
-            RotacionarPersonagem(); // Rotacionar o personagem seguindo o joystick
-        }
-        else
-        {
-            movercamera();
+            if(jogador.GetComponent<NetworkObject>().OwnerClientId == NetworkManager.Singleton.LocalClientId)
+            {
+                int indice = 1;
+                warriorfathertransform = jogador.transform.Find("warrior's father(Clone)");
+                if(warriorfathertransform != null)
+                {
+                    for(int contador=0; contador<warriorfathertransform.childCount;contador++)
+                    {
+                        if(!warriorfathertransform.GetChild(contador).name.Contains("balao"))
+                        {
+                            Array.Resize(ref instanciadeguerreiros, indice);
+                            instanciadeguerreiros[indice-1] = warriorfathertransform.GetChild(contador).gameObject;
+                            indice++;
+                        }
+                    }
+                }
+            }
+            foreach(GameObject instanciadeguerreiro in instanciadeguerreiros)
+            {
+                // Agora execute a movimentação e rotação, uma vez que todas as verificações foram feitas
+                if (instanciadeguerreiro.GetComponent<movimentar>().enabled == true)
+                {
+                    mover_character();
+                    RotacionarPersonagem(); // Rotacionar o personagem seguindo o joystick
+                }
+                else
+                {
+                    movercamera();
+                }
+            }
         }
     }
-
-
     private void mover_character()
     {
         float moverH = mover.Horizontal;
@@ -101,9 +117,6 @@ private void RotacionarPersonagem()
 
         // Aplica a rotação ao personagem diretamente
         transform.eulerAngles = new Vector3(0, 0, graus);
-
-        // Debug para verificar os valores
-        Debug.Log($"Input: {mover.input}, Ângulo: {angle}, Graus: {graus}");
     }
 }
 

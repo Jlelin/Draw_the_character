@@ -67,7 +67,6 @@ public class NetworkButtonManager : MonoBehaviour
                     focofunction.maincamera = maincamera;
                     focofunction.maincamera_position = cameratransform;
                     focofunction.terreno = terreno;
-                    Debug.Log("terrreno");
                 }
                 else
                 {

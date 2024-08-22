@@ -76,12 +76,12 @@ public class gunbowatack : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
 
         life = atirar.life;
 
-        for (int i = 0; i < warrior_function.guerreiro.Length; i++)
+        for (int i = 0; i < warriorfunction.guerreiros.Length; i++)
         {
-            guerreirocinemachine = warrior_function.guerreiro[i].transform;
+            guerreirocinemachine = warriorfunction.guerreiros[i].transform;
             if (warriorfunction.cinemachinecamera.Follow == guerreirocinemachine)
             {
-                guerreiroPrincipal = warrior_function.guerreiro[i].transform;
+                guerreiroPrincipal = warriorfunction.guerreiros[i].transform;
                 distancia_entreguerreiro_emira = guerreiroPrincipal.position - miratransform.position;
 
                 // Calcula a distância entre o guerreiro principal e a mira
