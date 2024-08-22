@@ -22,7 +22,7 @@ GameObject:
   - component: {fileID: -1725465271242779696}
   m_Layer: 0
   m_Name: guerreiro_escudo_0
-  m_TagString: escudo_espada
+  m_TagString: guerreiroescudoespada
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

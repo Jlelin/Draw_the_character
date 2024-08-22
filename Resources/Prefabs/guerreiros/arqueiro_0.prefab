@@ -20,7 +20,7 @@ GameObject:
   - component: {fileID: -6092689870095628283}
   m_Layer: 0
   m_Name: arqueiro_0
-  m_TagString: arqueiro
+  m_TagString: guerreiroarqueiro
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

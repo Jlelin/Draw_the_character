@@ -20,7 +20,7 @@ GameObject:
   - component: {fileID: -5264105460690885843}
   m_Layer: 0
   m_Name: guerreiro_armado_0
-  m_TagString: armafogo
+  m_TagString: guerreirosniper
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

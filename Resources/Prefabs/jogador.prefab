@@ -346,7 +346,7 @@ GameObject:
   - component: {fileID: 4839156428081140644}
   m_Layer: 0
   m_Name: guerreiroselecionado_0
-  m_TagString: desarmado
+  m_TagString: guerreirodesarmado
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -564,13 +564,18 @@ MonoBehaviour:
   proibidoatacar: {fileID: 5388894325782505794}
   cinemachinecamera: {fileID: 4179259524503698974}
   guerreiros: []
+  jogadores: []
   botaodesenho: {fileID: 3408499946207049506}
   ataque: {fileID: 361373402597677850}
   mira: {fileID: 566453339290442858, guid: 4005dd6e35acbf741be54633210c835b, type: 3}
+  warriorschild: []
+  filhosdewarriorfatherfilhos: []
+  filhosdewarriorfather: {fileID: 0}
   constraints: {fileID: 0}
   balaorenderer: {fileID: 0}
   balaoatual: {fileID: 0}
   orderinlayer: 4
+  indices: 1
   apertado_botao: 0
   guardar_o: 0
   guardar_p: 0
@@ -632,7 +637,7 @@ GameObject:
   - component: {fileID: 872899921244969633}
   m_Layer: 0
   m_Name: balaoespada_vermelhodiferente_0
-  m_TagString: escudo_espada
+  m_TagString: guerreiroescudoespada
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1331,14 +1336,14 @@ MonoBehaviour:
   receberbalao_vermelho: {fileID: 0}
   quero_balaobranco: {fileID: 5638553220840377592}
   elementocomparativo: {fileID: 0}
-  balao_branco: {fileID: -39521265506031186, guid: 1b328041015cfc34ba7867ebd72a9706, type: 3}
+  balao_branco: {fileID: 21300000, guid: 81908c79d4262474fae2fb0083487c78, type: 3}
   balaobrancoarmado: {fileID: 4054767642806117457, guid: 75a9bcd4becbddf4ebe06d7f8aaff0a1, type: 3}
   balaobrancodesarmado: {fileID: 9027708485696749824, guid: 48b7a6050d3d1e742a874118e1768f17, type: 3}
   balaoarqueiro: {fileID: -8113320040737293488, guid: c8d29e9c9d274b5408a6fd9036404d77, type: 3}
   balao_diferentesguerreiros:
   - {fileID: -1100033667296600052, guid: 0a551f79f7ab2a041b1b57ea31ede37c, type: 3}
   - {fileID: -2900602871074374976, guid: ae07e1c230e5fd4459ff744e3c8604b4, type: 3}
-  - {fileID: 6056364801476667486, guid: 72f8d0a8d8d10cd4380726802768d86a, type: 3}
+  - {fileID: 21300000, guid: 8d598f65c52672b41b3b76782265a704, type: 3}
   - {fileID: -8303568797860856909, guid: cb5a9b2569269c848933bee012fe9c7e, type: 3}
   apertado_botao: 0
   balao_selecionado: 0
@@ -1672,7 +1677,7 @@ MonoBehaviour:
   meus_baloes: []
   balao_branco_elementofinal: {fileID: 0}
   elemento_diferente: {fileID: 0}
-  white_balao: {fileID: -39521265506031186, guid: 1b328041015cfc34ba7867ebd72a9706, type: 3}
+  white_balao: {fileID: 21300000, guid: ac6f90462a8f4334cb19e7b569195b38, type: 3}
   balaobrancoarmado: {fileID: 4054767642806117457, guid: 75a9bcd4becbddf4ebe06d7f8aaff0a1, type: 3}
   balaobrancodesarmado: {fileID: 9027708485696749824, guid: 48b7a6050d3d1e742a874118e1768f17, type: 3}
   balaoarqueiro: {fileID: -8113320040737293488, guid: c8d29e9c9d274b5408a6fd9036404d77, type: 3}
@@ -1956,7 +1961,7 @@ GameObject:
   - component: {fileID: 5509795993979375362}
   m_Layer: 0
   m_Name: arqueirobalao_0
-  m_TagString: arqueiro
+  m_TagString: guerreiroarqueiro
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -2040,7 +2045,7 @@ GameObject:
   - component: {fileID: 5638553220840377592}
   m_Layer: 0
   m_Name: balao_armadovermelho_0
-  m_TagString: armafogo
+  m_TagString: guerreirosniper
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -2128,6 +2133,10 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 827127076836359926, guid: 58d0c3c3b7ae68c4b8769e4639d02959, type: 3}
+      propertyPath: m_TagString
+      value: guerreirodesarmado
+      objectReference: {fileID: 0}
     - target: {fileID: 4621804629243297684, guid: 58d0c3c3b7ae68c4b8769e4639d02959, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -2196,6 +2205,10 @@ PrefabInstance:
     - target: {fileID: 1019430270752999250, guid: 7c3942807461f0c43a870f57cf60bd99, type: 3}
       propertyPath: m_IsActive
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1019430270752999250, guid: 7c3942807461f0c43a870f57cf60bd99, type: 3}
+      propertyPath: m_TagString
+      value: guerreiroescudoespada
       objectReference: {fileID: 0}
     - target: {fileID: 2129782272565270688, guid: 7c3942807461f0c43a870f57cf60bd99, type: 3}
       propertyPath: m_LocalPosition.x
@@ -2392,6 +2405,10 @@ PrefabInstance:
     - target: {fileID: 173540329970875872, guid: b53b9f1164ffac74eb5bcdb7e5cf9282, type: 3}
       propertyPath: m_IsActive
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 173540329970875872, guid: b53b9f1164ffac74eb5bcdb7e5cf9282, type: 3}
+      propertyPath: m_TagString
+      value: guerreiroarqueiro
       objectReference: {fileID: 0}
     - target: {fileID: 684182292162370467, guid: b53b9f1164ffac74eb5bcdb7e5cf9282, type: 3}
       propertyPath: m_LocalPosition.x
@@ -2670,6 +2687,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 0}
     - target: {fileID: 6425914698493913151, guid: 51aa977c18cdff84a81f05a0a904bd31, type: 3}
+      propertyPath: balao_diferentesguerreiros_vetor.Array.size
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 6425914698493913151, guid: 51aa977c18cdff84a81f05a0a904bd31, type: 3}
       propertyPath: balao_diferentesguerreiros_vetor.Array.data[0]
       value: 
       objectReference: {fileID: 2255410462381626444}
@@ -2874,6 +2895,10 @@ PrefabInstance:
     - target: {fileID: 2264887485068159822, guid: db23103800b63304bb2c6728eba06471, type: 3}
       propertyPath: m_IsActive
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2264887485068159822, guid: db23103800b63304bb2c6728eba06471, type: 3}
+      propertyPath: m_TagString
+      value: guerreirosniper
       objectReference: {fileID: 0}
     - target: {fileID: 2454766362597365737, guid: db23103800b63304bb2c6728eba06471, type: 3}
       propertyPath: m_LocalPosition.x
@@ -3308,6 +3333,14 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 4374297519580385824}
     m_Modifications:
+    - target: {fileID: 2787197863128903602, guid: 35c84cc165de5d3478b235e551bc18ae, type: 3}
+      propertyPath: m_Name
+      value: guerreirosniper
+      objectReference: {fileID: 0}
+    - target: {fileID: 2787197863128903602, guid: 35c84cc165de5d3478b235e551bc18ae, type: 3}
+      propertyPath: m_TagString
+      value: guerreirosniper
+      objectReference: {fileID: 0}
     - target: {fileID: 2809543825498688881, guid: 35c84cc165de5d3478b235e551bc18ae, type: 3}
       propertyPath: left
       value: 
@@ -3391,19 +3424,19 @@ PrefabInstance:
     - target: {fileID: 2809543825498688881, guid: 35c84cc165de5d3478b235e551bc18ae, type: 3}
       propertyPath: guerreiros.Array.data[0]
       value: 
-      objectReference: {fileID: 7655947878037169582, guid: ed65086e84117d34c8fa4e91aa676f03, type: 3}
+      objectReference: {fileID: 5220735918095783696, guid: 3c5a9d2437c55904f8e9a3a302a4aba2, type: 3}
     - target: {fileID: 2809543825498688881, guid: 35c84cc165de5d3478b235e551bc18ae, type: 3}
       propertyPath: guerreiros.Array.data[1]
       value: 
-      objectReference: {fileID: 6633831846231117623, guid: 3a90be1699d4cc246a96361a26b99f49, type: 3}
+      objectReference: {fileID: 6441692514486537599, guid: 8a38d0b6af39d8a479926b0be969e65f, type: 3}
     - target: {fileID: 2809543825498688881, guid: 35c84cc165de5d3478b235e551bc18ae, type: 3}
       propertyPath: guerreiros.Array.data[2]
       value: 
-      objectReference: {fileID: 6441692514486537599, guid: 8a38d0b6af39d8a479926b0be969e65f, type: 3}
+      objectReference: {fileID: 6633831846231117623, guid: 3a90be1699d4cc246a96361a26b99f49, type: 3}
     - target: {fileID: 2809543825498688881, guid: 35c84cc165de5d3478b235e551bc18ae, type: 3}
       propertyPath: guerreiros.Array.data[3]
       value: 
-      objectReference: {fileID: 5220735918095783696, guid: 3c5a9d2437c55904f8e9a3a302a4aba2, type: 3}
+      objectReference: {fileID: 7655947878037169582, guid: ed65086e84117d34c8fa4e91aa676f03, type: 3}
     - target: {fileID: 3039829187953490550, guid: 35c84cc165de5d3478b235e551bc18ae, type: 3}
       propertyPath: left
       value: 
@@ -3487,19 +3520,27 @@ PrefabInstance:
     - target: {fileID: 3039829187953490550, guid: 35c84cc165de5d3478b235e551bc18ae, type: 3}
       propertyPath: guerreiros.Array.data[0]
       value: 
-      objectReference: {fileID: 7655947878037169582, guid: ed65086e84117d34c8fa4e91aa676f03, type: 3}
+      objectReference: {fileID: 5220735918095783696, guid: 3c5a9d2437c55904f8e9a3a302a4aba2, type: 3}
     - target: {fileID: 3039829187953490550, guid: 35c84cc165de5d3478b235e551bc18ae, type: 3}
       propertyPath: guerreiros.Array.data[1]
       value: 
-      objectReference: {fileID: 6633831846231117623, guid: 3a90be1699d4cc246a96361a26b99f49, type: 3}
+      objectReference: {fileID: 6441692514486537599, guid: 8a38d0b6af39d8a479926b0be969e65f, type: 3}
     - target: {fileID: 3039829187953490550, guid: 35c84cc165de5d3478b235e551bc18ae, type: 3}
       propertyPath: guerreiros.Array.data[2]
       value: 
-      objectReference: {fileID: 6441692514486537599, guid: 8a38d0b6af39d8a479926b0be969e65f, type: 3}
+      objectReference: {fileID: 6633831846231117623, guid: 3a90be1699d4cc246a96361a26b99f49, type: 3}
     - target: {fileID: 3039829187953490550, guid: 35c84cc165de5d3478b235e551bc18ae, type: 3}
       propertyPath: guerreiros.Array.data[3]
       value: 
-      objectReference: {fileID: 5220735918095783696, guid: 3c5a9d2437c55904f8e9a3a302a4aba2, type: 3}
+      objectReference: {fileID: 7655947878037169582, guid: ed65086e84117d34c8fa4e91aa676f03, type: 3}
+    - target: {fileID: 4751952248127297126, guid: 35c84cc165de5d3478b235e551bc18ae, type: 3}
+      propertyPath: m_Name
+      value: guerreiroarqueiro
+      objectReference: {fileID: 0}
+    - target: {fileID: 4751952248127297126, guid: 35c84cc165de5d3478b235e551bc18ae, type: 3}
+      propertyPath: m_TagString
+      value: guerreiroarqueiro
+      objectReference: {fileID: 0}
     - target: {fileID: 4820695232275755476, guid: 35c84cc165de5d3478b235e551bc18ae, type: 3}
       propertyPath: m_AnchorMax.x
       value: 0
@@ -3591,19 +3632,19 @@ PrefabInstance:
     - target: {fileID: 4938545167290820388, guid: 35c84cc165de5d3478b235e551bc18ae, type: 3}
       propertyPath: guerreiros.Array.data[0]
       value: 
-      objectReference: {fileID: 7655947878037169582, guid: ed65086e84117d34c8fa4e91aa676f03, type: 3}
+      objectReference: {fileID: 5220735918095783696, guid: 3c5a9d2437c55904f8e9a3a302a4aba2, type: 3}
     - target: {fileID: 4938545167290820388, guid: 35c84cc165de5d3478b235e551bc18ae, type: 3}
       propertyPath: guerreiros.Array.data[1]
       value: 
-      objectReference: {fileID: 6633831846231117623, guid: 3a90be1699d4cc246a96361a26b99f49, type: 3}
+      objectReference: {fileID: 6441692514486537599, guid: 8a38d0b6af39d8a479926b0be969e65f, type: 3}
     - target: {fileID: 4938545167290820388, guid: 35c84cc165de5d3478b235e551bc18ae, type: 3}
       propertyPath: guerreiros.Array.data[2]
       value: 
-      objectReference: {fileID: 6441692514486537599, guid: 8a38d0b6af39d8a479926b0be969e65f, type: 3}
+      objectReference: {fileID: 6633831846231117623, guid: 3a90be1699d4cc246a96361a26b99f49, type: 3}
     - target: {fileID: 4938545167290820388, guid: 35c84cc165de5d3478b235e551bc18ae, type: 3}
       propertyPath: guerreiros.Array.data[3]
       value: 
-      objectReference: {fileID: 5220735918095783696, guid: 3c5a9d2437c55904f8e9a3a302a4aba2, type: 3}
+      objectReference: {fileID: 7655947878037169582, guid: ed65086e84117d34c8fa4e91aa676f03, type: 3}
     - target: {fileID: 5605501116957066777, guid: 35c84cc165de5d3478b235e551bc18ae, type: 3}
       propertyPath: left
       value: 
@@ -3683,19 +3724,19 @@ PrefabInstance:
     - target: {fileID: 5605501116957066777, guid: 35c84cc165de5d3478b235e551bc18ae, type: 3}
       propertyPath: guerreiros.Array.data[0]
       value: 
-      objectReference: {fileID: 7655947878037169582, guid: ed65086e84117d34c8fa4e91aa676f03, type: 3}
+      objectReference: {fileID: 5220735918095783696, guid: 3c5a9d2437c55904f8e9a3a302a4aba2, type: 3}
     - target: {fileID: 5605501116957066777, guid: 35c84cc165de5d3478b235e551bc18ae, type: 3}
       propertyPath: guerreiros.Array.data[1]
       value: 
-      objectReference: {fileID: 6633831846231117623, guid: 3a90be1699d4cc246a96361a26b99f49, type: 3}
+      objectReference: {fileID: 6441692514486537599, guid: 8a38d0b6af39d8a479926b0be969e65f, type: 3}
     - target: {fileID: 5605501116957066777, guid: 35c84cc165de5d3478b235e551bc18ae, type: 3}
       propertyPath: guerreiros.Array.data[2]
       value: 
-      objectReference: {fileID: 6441692514486537599, guid: 8a38d0b6af39d8a479926b0be969e65f, type: 3}
+      objectReference: {fileID: 6633831846231117623, guid: 3a90be1699d4cc246a96361a26b99f49, type: 3}
     - target: {fileID: 5605501116957066777, guid: 35c84cc165de5d3478b235e551bc18ae, type: 3}
       propertyPath: guerreiros.Array.data[3]
       value: 
-      objectReference: {fileID: 5220735918095783696, guid: 3c5a9d2437c55904f8e9a3a302a4aba2, type: 3}
+      objectReference: {fileID: 7655947878037169582, guid: ed65086e84117d34c8fa4e91aa676f03, type: 3}
     - target: {fileID: 6453333185912571691, guid: 35c84cc165de5d3478b235e551bc18ae, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5
@@ -3788,9 +3829,29 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.x
       value: 3045.0403
       objectReference: {fileID: 0}
+    - target: {fileID: 7621106072951287747, guid: 35c84cc165de5d3478b235e551bc18ae, type: 3}
+      propertyPath: m_Name
+      value: guerreirodesarmado
+      objectReference: {fileID: 0}
+    - target: {fileID: 7621106072951287747, guid: 35c84cc165de5d3478b235e551bc18ae, type: 3}
+      propertyPath: m_TagString
+      value: guerreirodesarmado
+      objectReference: {fileID: 0}
+    - target: {fileID: 7648804118726492748, guid: 35c84cc165de5d3478b235e551bc18ae, type: 3}
+      propertyPath: m_Name
+      value: guerreiroescudoespada
+      objectReference: {fileID: 0}
+    - target: {fileID: 7648804118726492748, guid: 35c84cc165de5d3478b235e551bc18ae, type: 3}
+      propertyPath: m_TagString
+      value: guerreiroescudoespada
+      objectReference: {fileID: 0}
     - target: {fileID: 8118441709190150305, guid: 35c84cc165de5d3478b235e551bc18ae, type: 3}
       propertyPath: m_Name
       value: mascara para pergaminho desenrolado
+      objectReference: {fileID: 0}
+    - target: {fileID: 8118441709190150305, guid: 35c84cc165de5d3478b235e551bc18ae, type: 3}
+      propertyPath: m_TagString
+      value: desenrolado
       objectReference: {fileID: 0}
     - target: {fileID: 9155148598344285543, guid: 35c84cc165de5d3478b235e551bc18ae, type: 3}
       propertyPath: foco
