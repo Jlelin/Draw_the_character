@@ -88,7 +88,7 @@ public class warrior_function : NetworkBehaviour
                 }
             }
         }
-       if(selecionarguerreiro == true)
+        if(selecionarguerreiro == true)
         {
             jogadores = GameObject.FindGameObjectsWithTag("Player");
             foreach(GameObject jogadorlocal in jogadores)

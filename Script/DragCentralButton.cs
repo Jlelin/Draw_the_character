@@ -14,6 +14,7 @@ public class DragCentralButton : NetworkBehaviour, IPointerDownHandler, IPointer
     public NetworkVariable<ulong> guerreiroID = new NetworkVariable<ulong>();
     public NetworkVariable<ulong> guerreiroInstanciadoID = new NetworkVariable<ulong>(0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
     public NetworkVariable<ulong> avoID = new NetworkVariable<ulong>();
+    public NetworkVariable<ulong> avoIDclient = new NetworkVariable<ulong>();
     public NetworkVariable<ulong> balaoID = new NetworkVariable<ulong>();
     public DragCentralButton[] instanciasderede;
     public GameObject[] todosobjetos, pergaminhosdesenrolados, jogadores;
@@ -33,7 +34,7 @@ public class DragCentralButton : NetworkBehaviour, IPointerDownHandler, IPointer
     public GameObject left, right, select_, warrior, focus, joystick, botaodedesenho, canvas, camaracharacter, xzinho;
     public GameObject ataquebutton, mira, playerprefab, balaoInstanciado;
     public static GameObject mirainstance;
-    public static NetworkObject instanciaguerreiro, instanciamira, instanciarpai;
+    public static NetworkObject instanciaguerreiro, instanciamira, instanciarpai, instanciapaiclient;
     public botaodesenho desenho;
     public qual_guerreiro guerreiroesquerdo;
     public qual_guerreirodireito guerreirodireito;
@@ -92,7 +93,6 @@ public class DragCentralButton : NetworkBehaviour, IPointerDownHandler, IPointer
             if(IsServer)
             {
                 paiinstanciado.transform.SetParent(jogador.transform, false);
-                avoID.Value = jogador.GetComponent<NetworkObject>().NetworkObjectId;
             }
         }
         if (isButtonPressed)
@@ -265,18 +265,18 @@ public class DragCentralButton : NetworkBehaviour, IPointerDownHandler, IPointer
                     {
                         if(IsClient && !IsHost)
                         {
-                            if(instanciarpai == null)
+                            if(instanciapaiclient == null)
                             {
                                 if(NetworkManager.Singleton.SpawnManager.SpawnedObjects.TryGetValue(warriorfatherdoclienteID.Value, out var warriorfathernetworkObject))
                                 {
-                                    instanciarpai = warriorfathernetworkObject;
+                                    instanciapaiclient = warriorfathernetworkObject;
                                 }
                             }
-                            if(instanciarpai != null)
+                            if(instanciapaiclient != null)
                             {
-                                if(instanciarpai.IsSpawned)
+                                if(instanciapaiclient.IsSpawned)
                                 {
-                                    paiinstanciado = instanciarpai.gameObject;
+                                    paiinstanciado = instanciapaiclient.gameObject;
                                     instanciadeguerreirosServerRpc(fixedPosition);
                                     
                                 }
@@ -286,6 +286,7 @@ public class DragCentralButton : NetworkBehaviour, IPointerDownHandler, IPointer
                         {
                             guerreiroInstanciado = Instantiate(guerreiro, fixedPosition, Quaternion.identity, paiinstanciado.transform);
                             instanciaguerreiro = guerreiroInstanciado.GetComponent<NetworkObject>();
+                            avoID.Value = jogador.GetComponent<NetworkObject>().NetworkObjectId;
                             if (NetworkManager.Singleton.SpawnManager.SpawnedObjects.TryGetValue(avoID.Value, out var networkObject))
                             {
                                 var avo = networkObject;
@@ -343,10 +344,13 @@ public class DragCentralButton : NetworkBehaviour, IPointerDownHandler, IPointer
                     jogadores = GameObject.FindGameObjectsWithTag("Player");
                     foreach(var jogadorlocal in jogadores)
                     {
-                        instanciarpai = jogadorlocal.transform.Find("warrior's father(Clone)").GetComponent<NetworkObject>();
-                        if (instanciarpai.OwnerClientId == NetworkManager.Singleton.LocalClientId)
+                        if(jogadorlocal.GetComponent<NetworkObject>().OwnerClientId == NetworkManager.Singleton.LocalClientId)
                         {
-                            balaoInstanciado = Instantiate(balao, fixedPosition, Quaternion.identity, instanciarpai.transform);
+                            instanciapaiclient = jogadorlocal.transform.Find("warrior's father(Clone)").GetComponent<NetworkObject>();
+                            if (instanciapaiclient.OwnerClientId == NetworkManager.Singleton.LocalClientId)
+                            {
+                                balaoInstanciado = Instantiate(balao, fixedPosition, Quaternion.identity, instanciapaiclient.transform);
+                            }
                         }
                     }
                     if (guerreiroesquerdo.balao[0] != null)
@@ -456,10 +460,10 @@ public class DragCentralButton : NetworkBehaviour, IPointerDownHandler, IPointer
             guerreiroInstanciado = networkObject2.gameObject;
         }
         instanciaguerreiro = guerreiroInstanciado.GetComponent<NetworkObject>();
-        if(IsServer)
+        /*if(IsServer)
         {
             guerreiroInstanciado.transform.SetParent(instanciarpai.transform, false);
-        }
+        }*/
         FixedJoystick fixedJoystick = joystick.GetComponent<FixedJoystick>();
         if (fixedJoystick != null)
         {
@@ -519,8 +523,9 @@ public class DragCentralButton : NetworkBehaviour, IPointerDownHandler, IPointer
     }
 
     [ServerRpc]
-    private void warriorfatherhaveafatherServerRpc()
+    private void warriorfatherhaveafatherServerRpc(ServerRpcParams rpcParams = default)
     {
+        ulong clientId = rpcParams.Receive.SenderClientId;
         todosobjetos = FindObjectsOfType<GameObject>(true);
         foreach(GameObject objeto in todosobjetos)
         {
@@ -540,27 +545,30 @@ public class DragCentralButton : NetworkBehaviour, IPointerDownHandler, IPointer
                 GameObject[] jogadores = todosobjetos.Where(obj => obj.CompareTag("Player")).ToArray();
                 foreach(GameObject jogador in jogadores)
                 {
-                    if (!jogador.transform.Find("warrior's father(Clone)"))
+                    if(jogador.GetComponent<NetworkObject>().OwnerClientId == clientId)
                     {
-                        paiinstanciado = Instantiate(warriorsParent);
-                        paiinstanciado.transform.position = new Vector3(0, 0, 0);
-                        instanciarpai = paiinstanciado.GetComponent<NetworkObject>();
-                    }
-                    if(instanciarpai != null)
-                    {
-                        if(!instanciarpai.IsSpawned)
+                        if (!jogador.transform.Find("warrior's father(Clone)"))
                         {
-                            avoID.Value = jogador.GetComponent<NetworkObject>().NetworkObjectId;
-                            if (NetworkManager.Singleton.SpawnManager.SpawnedObjects.TryGetValue(avoID.Value, out var networkObjectavo))
+                            paiinstanciado = Instantiate(warriorsParent);
+                            paiinstanciado.transform.position = new Vector3(0, 0, 0);
+                            instanciapaiclient = paiinstanciado.GetComponent<NetworkObject>();
+                        }
+                        if(instanciapaiclient != null)
+                        {
+                            if(!instanciapaiclient.IsSpawned)
                             {
-                                instanciarpai.SpawnWithOwnership(networkObjectavo.OwnerClientId);
-                                warriorfatherdoclienteID.Value = instanciarpai.NetworkObjectId;
+                                avoIDclient.Value = jogador.GetComponent<NetworkObject>().NetworkObjectId;
+                                if (NetworkManager.Singleton.SpawnManager.SpawnedObjects.TryGetValue(avoIDclient.Value, out var networkObjectavo))
+                                {
+                                    instanciapaiclient.SpawnWithOwnership(networkObjectavo.OwnerClientId);
+                                    warriorfatherdoclienteID.Value = instanciapaiclient.NetworkObjectId;
+                                }
                             }
                         }
-                    }
-                    if (NetworkManager.Singleton.SpawnManager.SpawnedObjects.TryGetValue(avoID.Value, out var networkObject))
-                    {
-                        paiinstanciado.transform.SetParent(networkObject.transform, true);
+                        if (NetworkManager.Singleton.SpawnManager.SpawnedObjects.TryGetValue(avoIDclient.Value, out var networkObject))
+                        {
+                            instanciapaiclient.transform.SetParent(networkObject.transform, true);
+                        }
                     }
                 }
                 desenrolado.SetActive(false);
@@ -585,13 +593,13 @@ public class DragCentralButton : NetworkBehaviour, IPointerDownHandler, IPointer
                     {
                         guerreiroInstanciado = Instantiate(guerreiro, fixedPosition, Quaternion.identity, paiinstanciado.transform);
                         instanciaguerreiro = guerreiroInstanciado.GetComponent<NetworkObject>();
-                        if (NetworkManager.Singleton.SpawnManager.SpawnedObjects.TryGetValue(avoID.Value, out var avonetworkobject))
+                        if (NetworkManager.Singleton.SpawnManager.SpawnedObjects.TryGetValue(avoIDclient.Value, out var avonetworkobject))
                         {
                             instanciaguerreiro.SpawnWithOwnership(avonetworkobject.OwnerClientId);
-                            instanciarpai = jogadorlocal.transform.Find("warrior's father(Clone)").GetComponent<NetworkObject>();
-                            if(instanciarpai.OwnerClientId == clientId)
+                            instanciapaiclient = jogadorlocal.transform.Find("warrior's father(Clone)").GetComponent<NetworkObject>();
+                            if(instanciapaiclient.OwnerClientId == clientId)
                             {
-                                instanciaguerreiro.transform.SetParent(instanciarpai.transform, false);
+                                instanciaguerreiro.transform.SetParent(instanciapaiclient.transform, false);
                                 instanciaguerreiro.ChangeOwnership(clientId);                            
                             }
                         }
