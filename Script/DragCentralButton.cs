@@ -21,7 +21,7 @@ public class DragCentralButton : NetworkBehaviour, IPointerDownHandler, IPointer
     public observarmira observarmira;
     public static int indices = 0, indicescliente = 0;
     private bool isButtonPressed = false;
-    private int maisumguerreiro;
+    private int maisumguerreiro, maisumguerreiroclient;
     public static int tamanho, tamanhocliente;
     private Vector3 scaleNormal = Vector3.one; // Escala normal do botão
     private Coroutine shrinkCoroutine;
@@ -391,19 +391,9 @@ public class DragCentralButton : NetworkBehaviour, IPointerDownHandler, IPointer
         
         if(IsServer)
         {
-            tamanho++;
-            Array.Resize(ref warriorfunction.guerreiros, tamanho);
-            maisumguerreiro = warriorfunction.guerreiros.Length - 1;
-            warriorfunction.guerreiros[maisumguerreiro] = guerreiroInstanciado;
-            maisumguerreiro++;
-            if (warriorfunction.guerreiros[indices] != null)
-            {
-                if (warriorfunction.guerreiros.Length - 1 > indices)
-                {
-                    indices++;
-                }
-            }
-
+            avoID.Value = jogador.NetworkObjectId;
+            guerreiroID.Value = instanciaguerreiro.NetworkObjectId;
+            notificarclientsaboutguerreiroswarriorfunciontserverClientRpc(avoID.Value, guerreiroID.Value, tagCentral);
         }
         if (guerreiroInstanciado == null || balaoInstanciado == null)
         {
@@ -485,10 +475,10 @@ public class DragCentralButton : NetworkBehaviour, IPointerDownHandler, IPointer
         {
             tamanhocliente++;
             Array.Resize(ref warriorfunction.guerreiros, tamanhocliente);
-            maisumguerreiro = warriorfunction.guerreiros.Length - 1;
+            maisumguerreiroclient = warriorfunction.guerreiros.Length - 1;
             var newguerreiroInstanciado = guerreiroInstanciadonetwork.gameObject;
-            warriorfunction.guerreiros[maisumguerreiro] = newguerreiroInstanciado;
-            maisumguerreiro++;
+            warriorfunction.guerreiros[maisumguerreiroclient] = newguerreiroInstanciado;
+            maisumguerreiroclient++;
             if (warriorfunction.guerreiros[indicescliente] != null)
             {
                 if (warriorfunction.guerreiros.Length - 1 > indicescliente)
@@ -518,6 +508,64 @@ public class DragCentralButton : NetworkBehaviour, IPointerDownHandler, IPointer
             {
                 escudoespadaluta = guerreironetworkobject.GetComponent<sowrdshieldfight>();
                 escudoespadaluta.ataquebutton = ataquebutton;
+            }
+        }
+    }
+
+    [ClientRpc]
+    private void notificarclientsaboutguerreiroswarriorfunciontserverClientRpc(ulong avoID, ulong guerreiroID, string tagcentral)
+    {
+        if (NetworkManager.Singleton.SpawnManager.SpawnedObjects.TryGetValue(avoID, out var networkObjectavo))
+        {
+            var canvas = networkObjectavo.transform.Find("Canvas");
+            for(int contador=0; contador< canvas.childCount; contador++)
+            {
+                if(canvas.GetChild(contador).gameObject.name.Contains("mascara"))
+                {
+                    if(!canvas.GetChild(contador).gameObject.activeSelf)
+                    {
+                        canvas.GetChild(contador).gameObject.SetActive(true);
+                    }
+                }
+            }
+            var desenrolado = canvas.transform.Find("mascara para pergaminho desenrolado");
+            var scrollbar = desenrolado.transform.Find("Scrollbar");
+            var slidingarea = scrollbar.transform.Find("Sliding Area");
+            var handle = slidingarea.transform.Find("Handle");
+            var mascarabotoespergaminho = handle.transform.Find("mascara");
+            if (NetworkManager.Singleton.SpawnManager.SpawnedObjects.TryGetValue(guerreiroID, out var networkObjectguerreiro))
+            {
+                for(int contador=0;contador<mascarabotoespergaminho.childCount;contador++)
+                {
+                    if(networkObjectguerreiro.tag == mascarabotoespergaminho.GetChild(contador).tag)
+                    {
+                        var guerreirobotao = mascarabotoespergaminho.transform.Find(mascarabotoespergaminho.GetChild(contador).gameObject.name);
+                        var scriptguerreirobotao = guerreirobotao.GetComponent<DragCentralButton>();
+                        tamanho++;
+                        Array.Resize(ref scriptguerreirobotao.warriorfunction.guerreiros, tamanho);
+                        maisumguerreiro = scriptguerreirobotao.warriorfunction.guerreiros.Length - 1;
+                        scriptguerreirobotao.warriorfunction.guerreiros[maisumguerreiro] = networkObjectguerreiro.gameObject;
+                        maisumguerreiro++;
+                        if (scriptguerreirobotao.warriorfunction.guerreiros[indices] != null)
+                        {
+                            if (scriptguerreirobotao.warriorfunction.guerreiros.Length - 1 > indices)
+                            {
+                                indices++;
+                            }
+                        }
+                        break;
+                    }
+                }
+            }
+            for(int contador=0; contador< canvas.childCount; contador++)
+            {
+                if(canvas.GetChild(contador).gameObject.name.Contains("mascara"))
+                {
+                    if(canvas.GetChild(contador).gameObject.activeSelf)
+                    {
+                        canvas.GetChild(contador).gameObject.SetActive(false);
+                    }
+                }
             }
         }
     }
