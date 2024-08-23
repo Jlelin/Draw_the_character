@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.Netcode;
+using Unity.Netcode.Components;
 using UnityEngine;
 
 public class movimentar : NetworkBehaviour
@@ -13,6 +14,7 @@ public class movimentar : NetworkBehaviour
     public Joystick mover; // Atualize para Joystick
     public GameObject[] instanciadeguerreiros, jogadores;
     public Transform warriorfathertransform;
+    public NetworkRigidbody2D corpoRigido;
     public Rigidbody2D corpo_rigido;
     public float velocidade, velocidadeRotacao;
     public float graus; // Variável para armazenar o valor de rotação
@@ -29,9 +31,6 @@ public class movimentar : NetworkBehaviour
 
     private void FixedUpdate()
     {
-        // Verifique se o NetworkManager está ativo e se o instanciaguerreiro está definido
-        if (NetworkManager.Singleton == null || DragCentralButton.instanciaguerreiro == null) return;
-
         // Verifique se a mira também está definida e tem um NetworkObject antes de continuar
         /*if (DragCentralButton.instanciamira != null)
         {
@@ -64,6 +63,7 @@ public class movimentar : NetworkBehaviour
             }
             foreach(GameObject instanciadeguerreiro in instanciadeguerreiros)
             {
+                corpoRigido = instanciadeguerreiro.GetComponent<NetworkRigidbody2D>();
                 // Agora execute a movimentação e rotação, uma vez que todas as verificações foram feitas
                 if (instanciadeguerreiro.GetComponent<movimentar>().enabled == true)
                 {
@@ -82,7 +82,6 @@ public class movimentar : NetworkBehaviour
         float moverH = mover.Horizontal;
         float moverV = mover.Vertical;
         Vector2 direcao = new Vector2(moverH, moverV).normalized;
-
         corpo_rigido.velocity = direcao * velocidade;
     }
 
@@ -119,6 +118,4 @@ private void RotacionarPersonagem()
         transform.eulerAngles = new Vector3(0, 0, graus);
     }
 }
-
-
 }

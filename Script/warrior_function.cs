@@ -135,6 +135,10 @@ public class warrior_function : NetworkBehaviour
                             {
 
                                 instanciaguerreiro.GetComponent<movimentar>().enabled = true;
+                                if(IsClient)
+                                {
+                                    notificarservidormovimentartrueServerRpc(instanciaguerreiro.NetworkObjectId);
+                                }
                                 if(instanciaguerreiro.CompareTag("guerreiroarqueiro") || instanciaguerreiro.CompareTag("guerreirosniper"))
                                 {
                                     ataque.GetComponent<atackbutton>().enabled = false;
@@ -166,33 +170,36 @@ public class warrior_function : NetworkBehaviour
                         var canvas = jogadorlocal.transform.Find("Canvas");
                         var warrior = canvas.transform.Find("warrior");
                         var scriptwarrior = warrior.GetComponent<warrior_function>();
-                        scriptwarrior.guerreiros[o].SetActive(true);
-                        instanciaguerreiro = scriptwarrior.guerreiros[o].GetComponent<NetworkObject>();
-                        instanciaguerreiro.enabled = true;
-                        if(instanciaguerreiro.OwnerClientId != NetworkManager.Singleton.LocalClientId)
+                        if(scriptwarrior.guerreiros.Length > 0)
                         {
-                            indices = 1;
-                            filhosdewarriorfather = jogadorlocal.transform.Find("warrior's father(Clone)");
-                            if(filhosdewarriorfather != null)
+                            scriptwarrior.guerreiros[o].SetActive(true);
+                            instanciaguerreiro = scriptwarrior.guerreiros[o].GetComponent<NetworkObject>();
+                            instanciaguerreiro.enabled = true;
+                            if(instanciaguerreiro.OwnerClientId != NetworkManager.Singleton.LocalClientId)
                             {
-                                var indicesfilhos = 1;
-                                for(int j=0; j<filhosdewarriorfather.transform.childCount; j++)
+                                indices = 1;
+                                filhosdewarriorfather = jogadorlocal.transform.Find("warrior's father(Clone)");
+                                if(filhosdewarriorfather != null)
                                 {
-                                    var sprite = filhosdewarriorfather.transform.GetChild(j).GetComponent<SpriteRenderer>();
-                                    if(sprite.sprite != null)
+                                    var indicesfilhos = 1;
+                                    for(int j=0; j<filhosdewarriorfather.transform.childCount; j++)
                                     {
-                                        if(!sprite.sprite.name.Contains("balao"))
+                                        var sprite = filhosdewarriorfather.transform.GetChild(j).GetComponent<SpriteRenderer>();
+                                        if(sprite.sprite != null)
                                         {
-                                            Array.Resize(ref filhosdewarriorfatherfilhos, indicesfilhos);
-                                            filhosdewarriorfatherfilhos[indicesfilhos-1] = filhosdewarriorfather.GetChild(j);
-                                            indicesfilhos++;
+                                            if(!sprite.sprite.name.Contains("balao"))
+                                            {
+                                                Array.Resize(ref filhosdewarriorfatherfilhos, indicesfilhos);
+                                                filhosdewarriorfatherfilhos[indicesfilhos-1] = filhosdewarriorfather.GetChild(j);
+                                                indicesfilhos++;
+                                            }
                                         }
                                     }
                                 }
                             }
+                            constraints = instanciaguerreiro.GetComponent<Rigidbody2D>();
+                            constraints.constraints = RigidbodyConstraints2D.FreezePositionX | RigidbodyConstraints2D.FreezePositionY | RigidbodyConstraints2D.FreezeRotation;
                         }
-                        constraints = instanciaguerreiro.GetComponent<Rigidbody2D>();
-                        constraints.constraints = RigidbodyConstraints2D.FreezePositionX | RigidbodyConstraints2D.FreezePositionY | RigidbodyConstraints2D.FreezeRotation;
                     }
                 }
             }
@@ -284,6 +291,17 @@ public class warrior_function : NetworkBehaviour
                 }
             }
        }
+    }
+
+    [ServerRpc]
+    private void notificarservidormovimentartrueServerRpc(ulong guerreiroID)
+    {
+        if (NetworkManager.Singleton.SpawnManager.SpawnedObjects.TryGetValue(guerreiroID, out var guerreironetworkobject))
+        {
+            guerreironetworkobject.gameObject.SetActive(true);
+            guerreironetworkobject.enabled = true;
+            guerreironetworkobject.GetComponent<movimentar>().enabled = true;
+        }
     }
 
     public void apertar_botao(int pressionado)

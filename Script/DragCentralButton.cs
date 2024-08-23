@@ -495,6 +495,29 @@ public class DragCentralButton : NetworkBehaviour, IPointerDownHandler, IPointer
         }
     }
 
+    [ClientRpc]
+    private void notificarvaloresdeguerreirosClientRpc(ulong guerreiroID)
+    {
+        if (NetworkManager.Singleton.SpawnManager.SpawnedObjects.TryGetValue(guerreiroID, out var guerreironetworkobject))
+        {
+            var movimentar = guerreironetworkobject.GetComponent<movimentar>();
+            FixedJoystick fixedjoystick = joystick.GetComponent<FixedJoystick>();
+            movimentar.mover = fixedjoystick;
+            movimentar.enabled = false;
+            guerreironetworkobject.gameObject.SetActive(false);
+            if (ataquebutton != null && guerreironetworkobject.CompareTag("guerreiroescudoespada"))
+            {
+                sowrdshieldfight scriptataqueespada = guerreironetworkobject.GetComponent<sowrdshieldfight>();
+                scriptataqueespada.ataquebutton = ataquebutton;
+            }
+            if (guerreironetworkobject != null && guerreironetworkobject.CompareTag("guerreiroescudoespada"))
+            {
+                escudoespadaluta = guerreironetworkobject.GetComponent<sowrdshieldfight>();
+                escudoespadaluta.ataquebutton = ataquebutton;
+            }
+        }
+    }
+
     [ServerRpc]
     private void warriorfatherhaveafatherServerRpc()
     {
@@ -569,18 +592,38 @@ public class DragCentralButton : NetworkBehaviour, IPointerDownHandler, IPointer
                             if(instanciarpai.OwnerClientId == clientId)
                             {
                                 instanciaguerreiro.transform.SetParent(instanciarpai.transform, false);
+                                instanciaguerreiro.ChangeOwnership(clientId);                            
                             }
+                        }
+                        FixedJoystick fixedJoystick = joystick.GetComponent<FixedJoystick>();
+                        if (fixedJoystick != null)
+                        {
+                            movimentar guerreiroScript = instanciaguerreiro.GetComponent<movimentar>();
+                            if (guerreiroScript != null)
+                            {
+                                guerreiroScript.mover = fixedJoystick;
+                                guerreiroScript.enabled = false;
+                                instanciaguerreiro.enabled = false;
+                                guerreiroInstanciado.SetActive(false);
+                            }
+                        }
+                        if (ataquebutton != null && instanciaguerreiro.CompareTag("guerreiroescudoespada"))
+                        {
+                            sowrdshieldfight scriptataqueespada = instanciaguerreiro.GetComponent<sowrdshieldfight>();
+                            scriptataqueespada.ataquebutton = ataquebutton;
+                        }
+                        if (instanciaguerreiro != null && instanciaguerreiro.CompareTag("guerreiroescudoespada"))
+                        {
+                            escudoespadaluta = instanciaguerreiro.GetComponent<sowrdshieldfight>();
+                            escudoespadaluta.ataquebutton = ataquebutton;
                         }
                     }
                 }
             }
         }
+        notificarvaloresdeguerreirosClientRpc(instanciaguerreiro.NetworkObjectId);
         guerreirosdewarriorfunctionClientRpc(instanciaguerreiro.NetworkObjectId);
     }
-
-
-
-
 
     private ScaleType GetRandomScaleType()
     {
