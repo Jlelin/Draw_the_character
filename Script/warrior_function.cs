@@ -21,7 +21,7 @@ public class warrior_function : NetworkBehaviour
     public Rigidbody2D constraints;
     public SpriteRenderer balaorenderer, balaoatual;
     public static NetworkObject instanciaguerreiro;
-    public static NetworkVariable<ulong> guerreirosID = new NetworkVariable<ulong>();
+    public static NetworkVariable<ulong> guerreirosID = new NetworkVariable<ulong>(value: 0, writePerm: NetworkVariableWritePermission.Owner);
     public int orderinlayer, indices = 1;
     public int apertado_botao, guardar_o, guardar_p;
     public bool selecionarguerreiro;

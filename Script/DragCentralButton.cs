@@ -10,12 +10,12 @@ using System.Collections.Generic;
 
 public class DragCentralButton : NetworkBehaviour, IPointerDownHandler, IPointerUpHandler, IDragHandler
 {
-    public NetworkVariable<ulong> warriorfatherdoclienteID = new NetworkVariable<ulong>();
+    public static NetworkVariable<ulong> warriorfatherdoclienteID = new NetworkVariable<ulong>();
     public NetworkVariable<ulong> guerreiroID = new NetworkVariable<ulong>();
     public NetworkVariable<ulong> guerreiroInstanciadoID = new NetworkVariable<ulong>(0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
     public NetworkVariable<ulong> miraID = new NetworkVariable<ulong>();
     public NetworkVariable<ulong> avoID = new NetworkVariable<ulong>();
-    public NetworkVariable<ulong> avoIDclient = new NetworkVariable<ulong>();
+    public static NetworkVariable<ulong> avoIDclient = new NetworkVariable<ulong>();
     public NetworkVariable<ulong> balaoID = new NetworkVariable<ulong>();
     public DragCentralButton[] instanciasderede;
     public GameObject[] todosobjetos, pergaminhosdesenrolados, jogadores;
@@ -494,6 +494,96 @@ public class DragCentralButton : NetworkBehaviour, IPointerDownHandler, IPointer
             }
         }
     }
+
+    [ClientRpc]
+    private void valoresdoguerreirodetiroparaclienteClientRpc(ulong guerreiroID, ulong miraID, ulong clientId)
+    {
+        jogadores = GameObject.FindGameObjectsWithTag("Player");
+        foreach(var jogadorlocal in jogadores)
+        {
+            var jogadorlocalnetwork = jogadorlocal.GetComponent<NetworkObject>();
+            if (clientId == jogadorlocalnetwork.OwnerClientId)
+            {
+                foreach (GameObject guerreiro in guerreiros)
+                {
+                    if(NetworkManager.Singleton.SpawnManager.SpawnedObjects.TryGetValue(guerreiroID, out var guerreironetwork))
+                    {
+                        if(NetworkManager.Singleton.SpawnManager.SpawnedObjects.TryGetValue(miraID, out var miranetwork))
+                        {
+                            if(guerreironetwork.CompareTag("guerreiroarqueiro") || guerreironetwork.CompareTag("guerreirosniper"))
+                            {    
+                                var canvas = jogador.transform.Find("Canvas");
+                                for(int contador=0; contador< canvas.childCount; contador++)
+                                {
+                                    if(canvas.GetChild(contador).gameObject.name.Contains("mascara"))
+                                    {
+                                        if(!canvas.GetChild(contador).gameObject.activeSelf)
+                                        {
+                                            canvas.GetChild(contador).gameObject.SetActive(true);
+                                        }
+                                    }
+                                    if(canvas.GetChild(contador).gameObject.name.Contains("Ataque"))
+                                    {
+                                        if(!canvas.GetChild(contador).gameObject.activeSelf)
+                                        {
+                                            canvas.GetChild(contador).gameObject.SetActive(true);
+                                        }
+                                    }
+                                }
+                                var gunBow = canvas.transform.Find("Ataque").GetComponent<gunbow>();
+                                var atackButton = canvas.transform.Find("Ataque").GetComponent<atackbutton>();
+                                atackButton.enabled = false;
+                                gunBow.mira = miranetwork.gameObject;
+                                var desenrolado = canvas.transform.Find("mascara para pergaminho desenrolado");
+                                var scrollbar = desenrolado.transform.Find("Scrollbar");
+                                var slidingarea = scrollbar.transform.Find("Sliding Area");
+                                var handle = slidingarea.transform.Find("Handle");
+                                var mascarabotoespergaminho = handle.transform.Find("mascara");
+                                for(int contador=0;contador<mascarabotoespergaminho.childCount;contador++)
+                                {
+                                    if(guerreironetwork.tag == mascarabotoespergaminho.GetChild(contador).tag)
+                                    {
+                                        var guerreirobotao = mascarabotoespergaminho.transform.Find(mascarabotoespergaminho.GetChild(contador).gameObject.name);
+                                        var scriptguerreirobotao = guerreirobotao.GetComponent<DragCentralButton>();
+                                        observarmira.arrastarbotaocentral = scriptguerreirobotao;
+                                        if(guerreironetwork.CompareTag("guerreiroarqueiro") || guerreironetwork.CompareTag("guerreirosniper"))
+                                        {
+                                            miranetwork.GetComponent<movimentar>().mover = scriptguerreirobotao.joystick.GetComponent<FixedJoystick>();
+                                            scriptguerreirobotao.observarmira = guerreironetwork.GetComponent<observarmira>();
+                                            observarmira.mira = miranetwork.gameObject;
+                                        }
+                                        if (mira != null)
+                                        {
+                                            movimentar movimento = guerreironetwork.GetComponent<movimentar>();
+                                            movimento.miraId.Value = scriptguerreirobotao.mira.GetComponent<NetworkObject>().NetworkObjectId;
+                                        }
+                                    }
+                                }
+                               for(int contador=0; contador< canvas.childCount; contador++)
+                                {
+                                    if(canvas.GetChild(contador).gameObject.name.Contains("mascara"))
+                                    {
+                                        if(canvas.GetChild(contador).gameObject.activeSelf)
+                                        {
+                                            canvas.GetChild(contador).gameObject.SetActive(false);
+                                        }
+                                    }
+                                    if(canvas.GetChild(contador).gameObject.name.Contains("Ataque"))
+                                    {
+                                        if(canvas.GetChild(contador).gameObject.activeSelf)
+                                        {
+                                            canvas.GetChild(contador).gameObject.SetActive(false);
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
     [ClientRpc]
     private void valoresdoguerreirobrancoClientRpc(ulong guerreiroID, Vector3 posicaofixa, ulong avoID)
     {
@@ -720,6 +810,50 @@ public class DragCentralButton : NetworkBehaviour, IPointerDownHandler, IPointer
                         {
                             escudoespadaluta = instanciaguerreiro.GetComponent<sowrdshieldfight>();
                             escudoespadaluta.ataquebutton = ataquebutton;
+                        }
+                        if(instanciaguerreiro.CompareTag("guerreiroarqueiro") || instanciaguerreiro.CompareTag("guerreirosniper"))
+                        {
+                            mirainstance = Instantiate(mira);
+                            instanciamira = mirainstance.GetComponent<NetworkObject>();
+                            instanciamira.SpawnWithOwnership(jogadorlocalnetwork.OwnerClientId);
+                            instanciamira.transform.SetParent(jogadorlocal.transform, true);    
+                            var canvas = jogador.transform.Find("Canvas");
+                            for(int contador=0; contador< canvas.childCount; contador++)
+                            {
+                                if(canvas.GetChild(contador).gameObject.name.Contains("mascara"))
+                                {
+                                    if(!canvas.GetChild(contador).gameObject.activeSelf)
+                                    {
+                                        canvas.GetChild(contador).gameObject.SetActive(true);
+                                    }
+                                }
+                            }
+                            var desenrolado = canvas.transform.Find("mascara para pergaminho desenrolado");
+                            var scrollbar = desenrolado.transform.Find("Scrollbar");
+                            var slidingarea = scrollbar.transform.Find("Sliding Area");
+                            var handle = slidingarea.transform.Find("Handle");
+                            var mascarabotoespergaminho = handle.transform.Find("mascara");
+                            for(int contador=0;contador<mascarabotoespergaminho.childCount;contador++)
+                            {
+                                if(instanciaguerreiro.tag == mascarabotoespergaminho.GetChild(contador).tag)
+                                {
+                                    var guerreirobotao = mascarabotoespergaminho.transform.Find(mascarabotoespergaminho.GetChild(contador).gameObject.name);
+                                    var scriptguerreirobotao = guerreirobotao.GetComponent<DragCentralButton>();
+                                    observarmira.arrastarbotaocentral = scriptguerreirobotao;
+                                    if(instanciaguerreiro.CompareTag("guerreiroarqueiro") || instanciaguerreiro.CompareTag("guerreirosniper"))
+                                    {
+                                        instanciamira.GetComponent<movimentar>().mover = scriptguerreirobotao.joystick.GetComponent<FixedJoystick>();
+                                        scriptguerreirobotao.observarmira = instanciaguerreiro.GetComponent<observarmira>();
+                                        observarmira.mira = instanciamira.gameObject;
+                                    }
+                                    if (mira != null)
+                                    {
+                                        movimentar movimento = instanciaguerreiro.GetComponent<movimentar>();
+                                        movimento.miraId.Value = scriptguerreirobotao.mira.GetComponent<NetworkObject>().NetworkObjectId;
+                                    }
+                                }
+                            }
+                            valoresdoguerreirodetiroparaclienteClientRpc(instanciaguerreiro.NetworkObjectId, instanciamira.NetworkObjectId, clientId);
                         }
                     }
                 }

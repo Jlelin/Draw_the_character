@@ -68,7 +68,14 @@ public class gunbow : NetworkBehaviour, IPointerDownHandler, IPointerUpHandler
                 for (int i = 0; i < warriorfunction.guerreiros.Length; i++)
                 {
                     guerreirocinemachine = warriorfunction.guerreiros[i].transform;
-                    warrior_function.guerreirosID.Value = warriorfunction.guerreiros[i].GetComponent<NetworkObject>().NetworkObjectId;
+                    if(IsClient)
+                    {
+                        atribuirvaloraguerreiroIDServerRpc(warriorfunction.guerreiros[i].GetComponent<NetworkObject>().NetworkObjectId);
+                    }
+                    else
+                    {
+                        warrior_function.guerreirosID.Value = warriorfunction.guerreiros[i].GetComponent<NetworkObject>().NetworkObjectId;
+                    }
                     guerreirodowarriorfunction = NetworkManager.Singleton.SpawnManager.SpawnedObjects[warrior_function.guerreirosID.Value];
                     if (warriorfunction.cinemachinecamera.Follow == guerreirocinemachine)
                     {
@@ -135,5 +142,11 @@ public class gunbow : NetworkBehaviour, IPointerDownHandler, IPointerUpHandler
     {
         yield return null; // Aguarda um frame para garantir que a posição foi atualizada
         mira.SetActive(true); // Ativa a mira após um frame
+    }
+
+    [ServerRpc]
+    private void atribuirvaloraguerreiroIDServerRpc(ulong guerreiroID)
+    {
+        warrior_function.guerreirosID.Value = guerreiroID;
     }
 }
