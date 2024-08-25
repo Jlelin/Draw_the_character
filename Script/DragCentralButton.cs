@@ -13,6 +13,7 @@ public class DragCentralButton : NetworkBehaviour, IPointerDownHandler, IPointer
     public NetworkVariable<ulong> warriorfatherdoclienteID = new NetworkVariable<ulong>();
     public NetworkVariable<ulong> guerreiroID = new NetworkVariable<ulong>();
     public NetworkVariable<ulong> guerreiroInstanciadoID = new NetworkVariable<ulong>(0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
+    public NetworkVariable<ulong> miraID = new NetworkVariable<ulong>();
     public NetworkVariable<ulong> avoID = new NetworkVariable<ulong>();
     public NetworkVariable<ulong> avoIDclient = new NetworkVariable<ulong>();
     public NetworkVariable<ulong> balaoID = new NetworkVariable<ulong>();
@@ -40,7 +41,7 @@ public class DragCentralButton : NetworkBehaviour, IPointerDownHandler, IPointer
     public qual_guerreirodireito guerreirodireito;
     public warrior_function warriorfunction;
     public sowrdshieldfight escudoespadaluta;
-    public NetworkObject jogador;
+    public NetworkObject jogador, networkObjectguerreiro;
     public int tamanhototal  = 0;
     private string tagCentral;
 
@@ -320,13 +321,16 @@ public class DragCentralButton : NetworkBehaviour, IPointerDownHandler, IPointer
                                 {
                                     instanciamira.GetComponent<movimentar>().mover = joystick.GetComponent<FixedJoystick>();
                                     observarmira = instanciaguerreiro.GetComponent<observarmira>();
-                                    observarmira.mira = mira;
+                                    observarmira.mira = mirainstance;
                                 }
                                 if (mira != null)
                                 {
                                     movimentar movimento = instanciaguerreiro.GetComponent<movimentar>();
                                     movimento.miraId.Value = mira.GetComponent<NetworkObject>().NetworkObjectId;
                                 }
+                                guerreiroID.Value = instanciaguerreiro.NetworkObjectId;
+                                miraID.Value = instanciamira.NetworkObjectId;
+                                valoresdoguerreirodetiroClientRpc(miraID.Value, guerreiroID.Value);
                             }
                         }
                     }
@@ -438,9 +442,57 @@ public class DragCentralButton : NetworkBehaviour, IPointerDownHandler, IPointer
         }
     }
     [ClientRpc]
-    private void valoresdoguerreirodetiroClientRpc()
+    private void valoresdoguerreirodetiroClientRpc(ulong miraID, ulong guerreiroID)
     {
-
+        jogadores = GameObject.FindGameObjectsWithTag("Player");
+        foreach(var jogador in jogadores)
+        {
+            if(jogador.GetComponent<NetworkObject>().OwnerClientId == 0)
+            {
+                var canvas = jogador.transform.Find("Canvas");
+                for(int contador=0; contador< canvas.childCount; contador++)
+                {
+                    if(canvas.GetChild(contador).gameObject.name.Contains("mascara"))
+                    {
+                        if(!canvas.GetChild(contador).gameObject.activeSelf)
+                        {
+                            canvas.GetChild(contador).gameObject.SetActive(true);
+                        }
+                    }
+                }
+                var desenrolado = canvas.transform.Find("mascara para pergaminho desenrolado");
+                var scrollbar = desenrolado.transform.Find("Scrollbar");
+                var slidingarea = scrollbar.transform.Find("Sliding Area");
+                var handle = slidingarea.transform.Find("Handle");
+                var mascarabotoespergaminho = handle.transform.Find("mascara");
+                if (NetworkManager.Singleton.SpawnManager.SpawnedObjects.TryGetValue(guerreiroID, out networkObjectguerreiro))
+                {
+                    for(int contador=0;contador<mascarabotoespergaminho.childCount;contador++)
+                    {
+                        if(networkObjectguerreiro.tag == mascarabotoespergaminho.GetChild(contador).tag)
+                        {
+                            var guerreirobotao = mascarabotoespergaminho.transform.Find(mascarabotoespergaminho.GetChild(contador).gameObject.name);
+                            var scriptguerreirobotao = guerreirobotao.GetComponent<DragCentralButton>();
+                            observarmira.arrastarbotaocentral = scriptguerreirobotao;
+                            if(NetworkManager.Singleton.SpawnManager.SpawnedObjects.TryGetValue(miraID, out var miranetworkobject))
+                            {
+                                if(networkObjectguerreiro.CompareTag("guerreiroarqueiro") || networkObjectguerreiro.CompareTag("guerreirosniper"))
+                                {
+                                    miranetworkobject.GetComponent<movimentar>().mover = scriptguerreirobotao.joystick.GetComponent<FixedJoystick>();
+                                    scriptguerreirobotao.observarmira = scriptguerreirobotao.networkObjectguerreiro.GetComponent<observarmira>();
+                                    observarmira.mira = miranetworkobject.gameObject;
+                                }
+                                if (mira != null)
+                                {
+                                    movimentar movimento = networkObjectguerreiro.GetComponent<movimentar>();
+                                    movimento.miraId.Value = scriptguerreirobotao.mira.GetComponent<NetworkObject>().NetworkObjectId;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
     }
     [ClientRpc]
     private void valoresdoguerreirobrancoClientRpc(ulong guerreiroID, Vector3 posicaofixa, ulong avoID)
@@ -450,10 +502,6 @@ public class DragCentralButton : NetworkBehaviour, IPointerDownHandler, IPointer
             guerreiroInstanciado = networkObject2.gameObject;
         }
         instanciaguerreiro = guerreiroInstanciado.GetComponent<NetworkObject>();
-        /*if(IsServer)
-        {
-            guerreiroInstanciado.transform.SetParent(instanciarpai.transform, false);
-        }*/
         FixedJoystick fixedJoystick = joystick.GetComponent<FixedJoystick>();
         if (fixedJoystick != null)
         {

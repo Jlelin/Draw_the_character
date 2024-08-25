@@ -10,7 +10,7 @@ public class observarmira : NetworkBehaviour
     public Transform guerreiroPrincipal;
     public Vector3 posicaodamira; // Referência ao transform do guerreiro principal
     public warrior_function warriorfunction;
-    public DragCentralButton arrastarbotaocentral;
+    public static DragCentralButton arrastarbotaocentral;
 
     private float initialAngle = 90f; // Ângulo inicial do guerreiro principal (olhando para a direita)
 
@@ -18,11 +18,11 @@ public class observarmira : NetworkBehaviour
     {
         mira_ativada.bancoposicaomira += guardarposicaomira;
         arrastarbotaocentral = FindFirstObjectByType<DragCentralButton>();
-        warriorfunction = arrastarbotaocentral.warrior.GetComponent<warrior_function>();
     }
 
     void Start()
     {
+        warriorfunction = arrastarbotaocentral.warrior.GetComponent<warrior_function>();
         // Define a rotação inicial do guerreiro principal para olhar para a direita
         for (int i = 0; i < warriorfunction.guerreiros.Length; i++)
         {
