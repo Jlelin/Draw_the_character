@@ -8,16 +8,33 @@ public class addcanvas : NetworkBehaviour
     public GameObject canvas;
     private GameObject instanciacanvas;
     private NetworkObject canvasnetwork;
+    private static bool foiinstanciado;
     // Start is called before the first frame update
     void Start()
     {
-        if(IsServer)
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
+        
+    }
+
+    public override void OnNetworkSpawn()
+    {
+        base.OnNetworkSpawn();
+        if(IsClient)
+        {
+            instanciarcanvasServerRpc();
+        }
+        else if(!foiinstanciado)
         {
             instanciacanvas = Instantiate(canvas, this.transform);
             canvasnetwork = instanciacanvas.GetComponent<NetworkObject>();
             canvasnetwork.Spawn();
+            canvasnetwork.transform.SetParent(this.transform, false);
+            foiinstanciado = true;
         }
-        canvasnetwork.transform.SetParent(this.transform, false);
         var botaodesenho = canvasnetwork.transform.Find("botaodesenho").gameObject;
         var botaodesenhoscript = botaodesenho.GetComponent<botaodesenho>();
         var charactercamera = this.transform.Find("character_camera");
@@ -31,9 +48,14 @@ public class addcanvas : NetworkBehaviour
         botaodesenhoscript.foco = charactercamerascript;
     }
 
-    // Update is called once per frame
-    void Update()
+    [ServerRpc]
+    private void instanciarcanvasServerRpc(ServerRpcParams serverrpcparams = default)
     {
-        
+        var clientId = serverrpcparams.Receive.SenderClientId;
+        instanciacanvas = Instantiate(canvas, this.transform);
+        canvasnetwork = instanciacanvas.GetComponent<NetworkObject>();
+        canvasnetwork.Spawn();
+        canvasnetwork.transform.SetParent(this.transform, false);
+        canvasnetwork.ChangeOwnership(clientId);
     }
 }
