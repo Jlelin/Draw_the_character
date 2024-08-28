@@ -1,0 +1,229 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &578492130622508477
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5768888899666744102}
+  - component: {fileID: 3440425951384807125}
+  - component: {fileID: 3331210967866688173}
+  - component: {fileID: 2439401109240741588}
+  - component: {fileID: 3453003915416160744}
+  - component: {fileID: 7733349617394370103}
+  m_Layer: 5
+  m_Name: escudo_espada
+  m_TagString: escudo_espada
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &5768888899666744102
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 578492130622508477}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: -17.805176, y: 20.289978}
+  m_SizeDelta: {x: 171.37, y: 101.8324}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!222 &3440425951384807125
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 578492130622508477}
+  m_CullTransparentMesh: 1
+--- !u!114 &3331210967866688173
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 578492130622508477}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Material: {fileID: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_Sprite: {fileID: 5615793494752572722, guid: d62da9babe2f5b848b28cd21861ae1f8, type: 3}
+  m_Type: 0
+  m_PreserveAspect: 0
+  m_FillCenter: 1
+  m_FillMethod: 4
+  m_FillAmount: 1
+  m_FillClockwise: 1
+  m_FillOrigin: 0
+  m_UseSpriteMesh: 0
+  m_PixelsPerUnitMultiplier: 1
+--- !u!114 &2439401109240741588
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 578492130622508477}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Navigation:
+    m_Mode: 3
+    m_WrapAround: 0
+    m_SelectOnUp: {fileID: 0}
+    m_SelectOnDown: {fileID: 0}
+    m_SelectOnLeft: {fileID: 0}
+    m_SelectOnRight: {fileID: 0}
+  m_Transition: 1
+  m_Colors:
+    m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
+    m_HighlightedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
+    m_PressedColor: {r: 0.89433956, g: 0.42354566, b: 0.42354566, a: 1}
+    m_SelectedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
+    m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
+    m_ColorMultiplier: 1
+    m_FadeDuration: 0.1
+  m_SpriteState:
+    m_HighlightedSprite: {fileID: 0}
+    m_PressedSprite: {fileID: 0}
+    m_SelectedSprite: {fileID: 0}
+    m_DisabledSprite: {fileID: 0}
+  m_AnimationTriggers:
+    m_NormalTrigger: Normal
+    m_HighlightedTrigger: Highlighted
+    m_PressedTrigger: Pressed
+    m_SelectedTrigger: Selected
+    m_DisabledTrigger: Disabled
+  m_Interactable: 1
+  m_TargetGraphic: {fileID: 3331210967866688173}
+  m_OnClick:
+    m_PersistentCalls:
+      m_Calls: []
+--- !u!114 &3453003915416160744
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 578492130622508477}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d573563bd62bcaa4994765d56e185ddd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  guerreiroID:
+    m_InternalValue: 0
+  guerreiroInstanciadoID:
+    m_InternalValue: 0
+  miraID:
+    m_InternalValue: 0
+  avoID:
+    m_InternalValue: 0
+  balaoID:
+    m_InternalValue: 0
+  instanciasderede: []
+  todosobjetos: []
+  pergaminhosdesenrolados: []
+  jogadores: []
+  observarmira: {fileID: 0}
+  guerreiros:
+  - {fileID: 5220735918095783696, guid: 3c5a9d2437c55904f8e9a3a302a4aba2, type: 3}
+  - {fileID: 6633831846231117623, guid: 3a90be1699d4cc246a96361a26b99f49, type: 3}
+  - {fileID: 6441692514486537599, guid: 8a38d0b6af39d8a479926b0be969e65f, type: 3}
+  - {fileID: 7655947878037169582, guid: ed65086e84117d34c8fa4e91aa676f03, type: 3}
+  baloes:
+  - {fileID: 7531510661772726776, guid: cf0c94169c6ed734e8ef5f3b08c5a683, type: 3}
+  - {fileID: 3779945981698131011, guid: 9cf0d9e245238ce4fb151d534efa48c9, type: 3}
+  - {fileID: 3290129142257369755, guid: d02ebcc2e06ad9e41ab67b6501a8118f, type: 3}
+  - {fileID: 310054298848391926, guid: 5b8a24f7a00570b4ba1c9350c7074d0f, type: 3}
+  filhosdemascarapergaminho: []
+  warriorsParent: {fileID: 0}
+  mask: {fileID: 0}
+  escudoespada: {fileID: 578492130622508477}
+  arcoflecha: {fileID: 0}
+  desarmado: {fileID: 0}
+  armado: {fileID: 0}
+  pergaminho_enrolado: {fileID: 0}
+  desenrolado: {fileID: 0}
+  left: {fileID: 0}
+  right: {fileID: 0}
+  select_: {fileID: 0}
+  warrior: {fileID: 0}
+  focus: {fileID: 0}
+  joystick: {fileID: 0}
+  botaodedesenho: {fileID: 0}
+  canvas: {fileID: 0}
+  camaracharacter: {fileID: 0}
+  xzinho: {fileID: 0}
+  ataquebutton: {fileID: 0}
+  mira: {fileID: 0}
+  playerprefab: {fileID: 0}
+  balaoInstanciado: {fileID: 0}
+  desenho: {fileID: 0}
+  guerreiroesquerdo: {fileID: 0}
+  guerreirodireito: {fileID: 0}
+  warriorfunction: {fileID: 0}
+  escudoespadaluta: {fileID: 0}
+  jogador: {fileID: -6029757345410936901, guid: 9d184c2b5ec89f543b7c908c88aa6bd1, type: 3}
+  networkObjectguerreiro: {fileID: 0}
+  tamanhototal: 0
+  scaleDuration: 2
+  smallSizeThreshold: 0.75
+  hasInstantiated: 0
+  totalScore: 4.76
+--- !u!114 &7733349617394370103
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 578492130622508477}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d0b148fe25e99eb48b9724523833bab1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Delegates:
+  - eventID: 2
+    callback:
+      m_PersistentCalls:
+        m_Calls: []
+  - eventID: 3
+    callback:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 3453003915416160744}
+          m_TargetAssemblyTypeName: DragCentralButton, Assembly-CSharp
+          m_MethodName: apertar_botao
+          m_Mode: 3
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
