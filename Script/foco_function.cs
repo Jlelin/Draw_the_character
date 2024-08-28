@@ -22,7 +22,6 @@ public class foco_function : MonoBehaviour
     {
         
         warrior = Object.FindFirstObjectByType<warrior_function>();
-        guerreiroesquerdo = FindFirstObjectByType<qual_guerreiro>();
         networkbutton_manager = NetworkButtonManager.canvasHostClient.GetComponent<NetworkButtonManager>();
         corrigirfocofunction += corrigirfocofunctionn;
 
@@ -31,7 +30,6 @@ public class foco_function : MonoBehaviour
     void Start()
     {
         corrigirfocofunction?.Invoke();
-        botaodesenho.SetActive(true);
         warriorobject.SetActive(true);
         tamanho_vetor = guerreiroesquerdo.balao.Length;
         maincamera = networkbutton_manager.maincamera;

@@ -6,9 +6,11 @@ using UnityEngine.EventSystems;
 
 public class gunbow : NetworkBehaviour, IPointerDownHandler, IPointerUpHandler
 {
+    public NetworkVariable<ulong> avodID = new NetworkVariable<ulong>();
     private int apertado_botao;
     public static int contador;
-    public GameObject mira, scriptwarrior, atirar, ataque;
+    public GameObject mira, scriptwarrior, atirar, ataque, jogadorobject;
+    public NetworkObject jogador;
     private PolygonCollider2D polygoncolliderenemy;
     private CircleCollider2D circlecolliderenemy;
     public static Vector3 miras, guerreiro;
@@ -24,9 +26,14 @@ public class gunbow : NetworkBehaviour, IPointerDownHandler, IPointerUpHandler
         if(mira == null)
         {
             mira = DragCentralButton.mirainstance;
-            miras = mira.transform.position;
+            if(mira != null)
+            {
+                miras = mira.transform.position;
+            }
         }
         warriorfunction = scriptwarrior.GetComponent<warrior_function>();
+        jogador = GetComponentInParent<NetworkObject>();
+        avodID.Value = jogador.NetworkObjectId;
     }
 
     // Update is called once per frame
@@ -41,7 +48,10 @@ public class gunbow : NetworkBehaviour, IPointerDownHandler, IPointerUpHandler
                 // Define a posição da mira e ativa ela após um frame
                 for (int i = 0; i < warriorfunction.guerreiros.Length; i++)
                 {
-                    warrior_function.guerreirosID.Value = warriorfunction.guerreiros[i].GetComponent<NetworkObject>().NetworkObjectId;
+                    if(IsServer)
+                    {
+                        warrior_function.guerreirosID.Value = warriorfunction.guerreiros[i].GetComponent<NetworkObject>().NetworkObjectId;
+                    }
                     guerreirodowarriorfunction = NetworkManager.Singleton.SpawnManager.SpawnedObjects[warrior_function.guerreirosID.Value];
                     movimento = guerreirodowarriorfunction.GetComponent<movimentar>();
                     if (movimento.enabled == true)

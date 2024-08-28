@@ -449,7 +449,7 @@ public class DragCentralButton : NetworkBehaviour, IPointerDownHandler, IPointer
         {
             if(jogador.GetComponent<NetworkObject>().OwnerClientId == 0)
             {
-                var canvas = jogador.transform.Find("Canvas");
+                var canvas = jogador.transform.Find("Canvas(Clone)");
                 for(int contador=0; contador< canvas.childCount; contador++)
                 {
                     if(canvas.GetChild(contador).gameObject.name.Contains("mascara"))
@@ -655,7 +655,7 @@ public class DragCentralButton : NetworkBehaviour, IPointerDownHandler, IPointer
     {
         if (NetworkManager.Singleton.SpawnManager.SpawnedObjects.TryGetValue(avoID, out var networkObjectavo))
         {
-            var canvas = networkObjectavo.transform.Find("Canvas");
+            var canvas = networkObjectavo.transform.Find("Canvas(Clone)");
             for(int contador=0; contador< canvas.childCount; contador++)
             {
                 if(canvas.GetChild(contador).gameObject.name.Contains("mascara"))

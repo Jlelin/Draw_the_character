@@ -32,8 +32,8 @@ public class PlayerUIManager : NetworkBehaviour
     private void Start()
     {
         // Sincroniza a UI inicialmente com os valores das NetworkVariables
-        botoesguerreiro.SetActive(botoesguerreiroActive.Value);
-        pergaminho.enabled = pergaminhoEnroladoEnabled.Value;
+        /*botoesguerreiro.SetActive(botoesguerreiroActive.Value);
+        pergaminho.enabled = pergaminhoEnroladoEnabled.Value;*/
 
         if (playerUI != null)
         {

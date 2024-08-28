@@ -21,7 +21,7 @@ public class warrior_function : NetworkBehaviour
     public Rigidbody2D constraints;
     public SpriteRenderer balaorenderer, balaoatual;
     public static NetworkObject instanciaguerreiro;
-    public static NetworkVariable<ulong> guerreirosID = new NetworkVariable<ulong>(value: 0, writePerm: NetworkVariableWritePermission.Owner);
+    public static NetworkVariable<ulong> guerreirosID = new NetworkVariable<ulong>();
     public int orderinlayer, indices = 1;
     public int apertado_botao, guardar_o, guardar_p;
     public bool selecionarguerreiro;
@@ -33,7 +33,6 @@ public class warrior_function : NetworkBehaviour
         guerreirodireito = UnityEngine.Object.FindFirstObjectByType<qual_guerreirodireito>();
         guerreiroesquerdo = UnityEngine.Object.FindFirstObjectByType<qual_guerreiro>();
         botaofoco.SetActive(false);
-        ataque.SetActive(false);
         atirar.SetActive(false);
         mira.SetActive(false);
         proibidoatacar.SetActive(false);
