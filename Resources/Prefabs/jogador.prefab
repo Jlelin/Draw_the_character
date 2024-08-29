@@ -94,14 +94,13 @@ GameObject:
   m_Component:
   - component: {fileID: 519471694239292207}
   - component: {fileID: 4179259524503698974}
-  - component: {fileID: 4426202327411358385}
   m_Layer: 0
   m_Name: character_camera
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &519471694239292207
 Transform:
   m_ObjectHideFlags: 0
@@ -157,34 +156,6 @@ MonoBehaviour:
         m_Calls: []
   m_LegacyBlendHint: 0
   m_ComponentOwner: {fileID: 9019787328412175407}
---- !u!114 &4426202327411358385
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 426232632187472510}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e6aa302e63b5aff488f04c4573ae9d2d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  apertado_botao: 0
-  networkbutton_manager: {fileID: 0}
-  guerreiroesquerdo: {fileID: 0}
-  warrior: {fileID: 0}
-  maincamera_position: {fileID: 0}
-  maincamera: {fileID: 0}
-  terreno: {fileID: 0}
-  warriorobject: {fileID: 0}
-  botaofoco: {fileID: 0}
-  ataque: {fileID: 0}
-  esquerdo: {fileID: 0}
-  direito: {fileID: 0}
-  selectwarrior: {fileID: 0}
-  botaodesenho: {fileID: 0}
-  atirar: {fileID: 0}
-  mira: {fileID: 566453339290442858, guid: 4005dd6e35acbf741be54633210c835b, type: 3}
 --- !u!1 &1248819676799593435
 GameObject:
   m_ObjectHideFlags: 0
@@ -304,6 +275,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 519471694239292207}
+  - {fileID: 3949806376575107131}
   - {fileID: 850545351735673827}
   - {fileID: 4827042232920416521}
   - {fileID: 2979409748525764250}
@@ -738,6 +710,68 @@ SpriteRenderer:
   m_WasSpriteAssigned: 0
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!1 &7931032814868239271
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 3949806376575107131}
+  - component: {fileID: 1725654493072791332}
+  m_Layer: 0
+  m_Name: focofunction
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &3949806376575107131
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7931032814868239271}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 12.245301, y: -0.20803651, z: -5.0478935}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 7025611313986711318}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1725654493072791332
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7931032814868239271}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e6aa302e63b5aff488f04c4573ae9d2d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  apertado_botao: 0
+  networkbutton_manager: {fileID: 0}
+  guerreiroesquerdo: {fileID: 0}
+  warrior: {fileID: 0}
+  maincamera_position: {fileID: 0}
+  maincamera: {fileID: 0}
+  terreno: {fileID: 0}
+  warriorobject: {fileID: 0}
+  botaofoco: {fileID: 0}
+  ataque: {fileID: 0}
+  esquerdo: {fileID: 0}
+  direito: {fileID: 0}
+  selectwarrior: {fileID: 0}
+  botaodesenho: {fileID: 0}
+  atirar: {fileID: 0}
+  mira: {fileID: 566453339290442858, guid: 4005dd6e35acbf741be54633210c835b, type: 3}
+  largura: 0
+  altura: 0
 --- !u!1 &8103406500458556201
 GameObject:
   m_ObjectHideFlags: 0
@@ -782,7 +816,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 604c43a16a8b9a349a811cbcb827dd5b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  focofunction: {fileID: 0}
   canvas: {fileID: 5610944077091515549, guid: c8d496783d67b404f82f0a64e94b7d43, type: 3}
+  focofunctionobject: {fileID: 7931032814868239271}
 --- !u!1001 &684119046751002000
 PrefabInstance:
   m_ObjectHideFlags: 0
