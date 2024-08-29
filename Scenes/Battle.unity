@@ -402,6 +402,14 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 3212275940853878213, guid: 28fd357ecb0f24842a43e9c23d5442f5, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: 053c6404056393d4f91a2a36996929c0, type: 3}
+    - target: {fileID: 3212275940853878213, guid: 28fd357ecb0f24842a43e9c23d5442f5, type: 3}
+      propertyPath: m_WasSpriteAssigned
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 5443226656499494152, guid: 28fd357ecb0f24842a43e9c23d5442f5, type: 3}
       propertyPath: m_Name
       value: terreno_base_0
@@ -1220,7 +1228,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: -3392494219146131526, guid: e3e647a43608e494c987c8e0e403b0a3, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 37f62c72e7d01ad45b76c352ad969a48, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -1321,7 +1329,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: -6166686540296644228, guid: 74409c40af6cfb14b9447c4d1c1d71c0, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 12e0e2b4c00a2ac43b2421481ac2d9bc, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
