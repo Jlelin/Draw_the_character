@@ -77,7 +77,15 @@ public class DragCentralButton : NetworkBehaviour, IPointerDownHandler, IPointer
 
     void Update()
     {
-        GameObject jogadorobject = jogador.gameObject;
+        GameObject jogadorobject = jogador?.gameObject;
+        GameObject[] jogadoreslocais = GameObject.FindGameObjectsWithTag("Player");
+        foreach(GameObject jogadorLocal in jogadoreslocais)
+        {
+            if(jogadorLocal.GetComponent<NetworkObject>().OwnerClientId == NetworkManager.Singleton.LocalClientId)
+            {
+                jogadorobject = jogadorLocal;
+            }
+        }
         if (!jogadorobject.transform.Find("warrior's father(Clone)"))
         {
             if(IsServer)

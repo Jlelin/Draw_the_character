@@ -5,12 +5,23 @@ using UnityEngine;
 
 public class addcanvas : NetworkBehaviour
 {
-    public GameObject canvas;
-    [SerializeField] private GameObject instanciacanvas;
+    public delegate void assinaturapararodarmetodofocofunctioninicial();
+    public event assinaturapararodarmetodofocofunctioninicial valoresatribuidosafocofunction;
+    public delegate void assinaturaparaavisarsobreguerreiroesquerdo();
+    public event assinaturaparaavisarsobreguerreiroesquerdo guerreiroesquerdopronto;
+    public foco_function focofunction;
+    public GameObject canvas, focofunctionobject;
+    public static GameObject instanciacanvas;
     private GameObject[] jogadores;
-    private NetworkObject canvasnetwork;
+    public static NetworkObject canvasnetwork;
     private static bool foiinstanciado;
     // Start is called before the first frame update
+
+    void Awake()
+    {
+        focofunction = focofunctionobject.GetComponent<foco_function>();
+        valoresatribuidosafocofunction += focofunction.focofunctioninitialessentials;
+    }
     void Start()
     {
     }
@@ -52,19 +63,7 @@ public class addcanvas : NetworkBehaviour
                 if(IsClient)
                 {
                     StartCoroutine(aguardandocanvas(jogadorlocal));
-                    canvasnetwork = instanciacanvas.GetComponent<NetworkObject>();
                 }
-                var botaodesenho = canvasnetwork.transform.Find("botaodesenho").gameObject;
-                var botaodesenhoscript = botaodesenho.GetComponent<botaodesenho>();
-                var charactercamera = jogadorlocal.transform.Find("character_camera");
-                var charactercamerascript = charactercamera.GetComponent<foco_function>();
-                charactercamerascript.botaodesenho = botaodesenho;
-                var warrior = canvasnetwork.transform.Find("warrior").gameObject;
-                charactercamerascript.warriorobject = warrior;
-                var left = canvasnetwork.transform.Find("Select Left").gameObject;
-                var guerreiroesquerdo = left.GetComponent<qual_guerreiro>();
-                charactercamerascript.guerreiroesquerdo = guerreiroesquerdo;
-                botaodesenhoscript.foco = charactercamerascript;
                 break;
             }
         }
@@ -77,9 +76,24 @@ public class addcanvas : NetworkBehaviour
             instanciacanvas = jogadorlocal.transform.Find("Canvas(Clone)")?.gameObject;
             yield return null;
         }
+        canvasnetwork = instanciacanvas?.GetComponent<NetworkObject>();
+        var botaodesenho = canvasnetwork.transform.Find("botaodesenho").gameObject;
+        var botaodesenhoscript = botaodesenho.GetComponent<botaodesenho>();
+        var focofunctionObject = jogadorlocal.transform.Find("focofunction");
+        var focofunctionscript = focofunctionObject.GetComponent<foco_function>();
+        focofunctionscript.botaodesenho = botaodesenho;
+        var warrior = canvasnetwork.transform.Find("warrior").gameObject;
+        focofunctionscript.warriorobject = warrior;
+        var left = canvasnetwork.transform.Find("Select Left").gameObject;
+        var guerreiroesquerdo = left.GetComponent<qual_guerreiro>();
+        focofunctionscript.guerreiroesquerdo = guerreiroesquerdo;
+        guerreiroesquerdopronto += focofunctionscript.atribuirguerreiroesquerdoatamanhovetor;
+        guerreiroesquerdopronto?.Invoke();
+        botaodesenhoscript.foco = focofunctionscript;
+        valoresatribuidosafocofunction?.Invoke();
     }
 
-    [ServerRpc]
+    [ServerRpc(RequireOwnership = false)]
     private void instanciarcanvasServerRpc(ServerRpcParams serverrpcparams = default)
     {
         var clientId = serverrpcparams.Receive.SenderClientId;
@@ -88,11 +102,14 @@ public class addcanvas : NetworkBehaviour
         {
             if(jogadorlocal.GetComponent<NetworkObject>().OwnerClientId == clientId)
             {
-                instanciacanvas = Instantiate(canvas, jogadorlocal.transform);
-                canvasnetwork = instanciacanvas.GetComponent<NetworkObject>();
-                canvasnetwork.Spawn();
-                canvasnetwork.transform.SetParent(jogadorlocal.transform, false);
-                canvasnetwork.ChangeOwnership(clientId);
+                if(!jogadorlocal.transform.Find("Canvas(Clone)"))
+                {
+                    instanciacanvas = Instantiate(canvas, jogadorlocal.transform);
+                    canvasnetwork = instanciacanvas.GetComponent<NetworkObject>();
+                    canvasnetwork.Spawn();
+                    canvasnetwork.transform.SetParent(jogadorlocal.transform, false);
+                    canvasnetwork.ChangeOwnership(clientId);
+                }
             }
         }
     }

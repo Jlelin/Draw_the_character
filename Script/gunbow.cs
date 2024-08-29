@@ -31,9 +31,11 @@ public class gunbow : NetworkBehaviour, IPointerDownHandler, IPointerUpHandler
                 miras = mira.transform.position;
             }
         }
-        warriorfunction = scriptwarrior.GetComponent<warrior_function>();
         jogador = GetComponentInParent<NetworkObject>();
-        avodID.Value = jogador.NetworkObjectId;
+        if(IsServer)
+        {
+            avodID.Value = jogador.NetworkObjectId;
+        }
     }
 
     // Update is called once per frame
@@ -94,16 +96,18 @@ public class gunbow : NetworkBehaviour, IPointerDownHandler, IPointerUpHandler
                 }
             }
         }
-
-        if (mira.activeSelf == true)
+        if(mira != null)
         {
-            /*for (int i = 0; i < enemy.Length; i++)
+            if (mira.activeSelf == true)
             {
-                polygoncolliderenemy = enemy[i].GetComponent<PolygonCollider2D>();
-                polygoncolliderenemy.enabled = false;
-                circlecolliderenemy = GetNonTriggerCircleCollider(enemy[i]);
-                circlecolliderenemy.enabled = true;
-            }*/
+                /*for (int i = 0; i < enemy.Length; i++)
+                {
+                    polygoncolliderenemy = enemy[i].GetComponent<PolygonCollider2D>();
+                    polygoncolliderenemy.enabled = false;
+                    circlecolliderenemy = GetNonTriggerCircleCollider(enemy[i]);
+                    circlecolliderenemy.enabled = true;
+                }*/
+            }
         }
     }
 
@@ -146,6 +150,11 @@ public class gunbow : NetworkBehaviour, IPointerDownHandler, IPointerUpHandler
             }
         }
         return colliderfinal;
+    }
+
+    public void receberscriptwarrior()
+    {
+        warriorfunction = scriptwarrior.GetComponent<warrior_function>();
     }
 
     private IEnumerator ActivateMiraAfterUpdate()

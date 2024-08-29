@@ -31,9 +31,6 @@ public class PlayerUIManager : NetworkBehaviour
 
     private void Start()
     {
-        // Sincroniza a UI inicialmente com os valores das NetworkVariables
-        /*botoesguerreiro.SetActive(botoesguerreiroActive.Value);
-        pergaminho.enabled = pergaminhoEnroladoEnabled.Value;*/
 
         if (playerUI != null)
         {
@@ -63,7 +60,7 @@ public class PlayerUIManager : NetworkBehaviour
                 }
 
                 // Ajuste da UI do outro cliente
-                Transform canvasobject = obj.transform.Find("Canvas");
+                Transform canvasobject = obj.transform.Find("Canvas(Clone)");
                 playerUI = canvasobject.GetComponent<Canvas>();
                 playerUI.enabled = false;
 

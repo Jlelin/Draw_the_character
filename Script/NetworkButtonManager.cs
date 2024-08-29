@@ -59,7 +59,7 @@ public class NetworkButtonManager : MonoBehaviour
                 var playerTransform = player.transform;
 
                 // Encontre um filho específico pelo nome
-                Transform specificChild = playerTransform.Find("character_camera");
+                Transform specificChild = playerTransform.Find("focofunction");
 
                 if (specificChild != null)
                 {

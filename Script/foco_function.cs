@@ -1,8 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Netcode;
 using UnityEngine;
 
-public class foco_function : MonoBehaviour
+public class foco_function : NetworkBehaviour
 {
     public delegate void assinantecorrigirfocofunction();
     public event assinantecorrigirfocofunction corrigirfocofunction;
@@ -16,7 +17,7 @@ public class foco_function : MonoBehaviour
     public GameObject warriorobject, botaofoco, ataque, esquerdo, direito, selectwarrior, botaodesenho, atirar;
     public GameObject mira;
     private int tamanho_vetor; // Mova a declaração para o escopo da classe
-    private float largura, altura;
+    public float largura, altura;
 
     void Awake()
     {
@@ -24,36 +25,18 @@ public class foco_function : MonoBehaviour
         warrior = Object.FindFirstObjectByType<warrior_function>();
         networkbutton_manager = NetworkButtonManager.canvasHostClient.GetComponent<NetworkButtonManager>();
         corrigirfocofunction += corrigirfocofunctionn;
+        this.gameObject.SetActive(false);
 
     }
     // Start is called before the first frame update
     void Start()
     {
-        corrigirfocofunction?.Invoke();
-        warriorobject.SetActive(true);
-        tamanho_vetor = guerreiroesquerdo.balao.Length;
-        maincamera = networkbutton_manager.maincamera;
-        maincamera_position = networkbutton_manager.cameratransform;
-        terreno = networkbutton_manager.terreno;
-        altura = terreno.bounds.size.y;
-        altura = altura * 100;
-        largura = altura / 100f;
-        largura = largura / 2f;
-        gameObject.SetActive(false);
-        maincamera_position.position = new Vector3(0, 0, -1);
-        maincamera.orthographicSize = largura;
-        if(guerreiroesquerdo.balao[0] != null)
-        {
-            for (int i = 0; i <= tamanho_vetor; i++) { // Corrija a condição aqui
-                guerreiroesquerdo.balao[i].SetActive(true);
-            }
-        }
+
     }
 
     // Update is called once per frame
     public void Update()
     {
-        tamanho_vetor = guerreiroesquerdo.balao.Length;
         if (apertado_botao == 1)
         {
             if (Input.touchCount > 0)
@@ -111,5 +94,32 @@ public class foco_function : MonoBehaviour
     public void corrigirfocofunctionn()
     {
         networkbutton_manager.ConfigurePlayerCharacter();
+    }
+
+    public void atribuirguerreiroesquerdoatamanhovetor()
+    {
+        tamanho_vetor = guerreiroesquerdo.balao.Length;
+    }
+
+    public void focofunctioninitialessentials()
+    {
+        corrigirfocofunction?.Invoke();
+        tamanho_vetor = guerreiroesquerdo.balao.Length;
+        maincamera = networkbutton_manager.maincamera;
+        maincamera_position = networkbutton_manager.cameratransform;
+        terreno = networkbutton_manager.terreno;
+        altura = terreno.bounds.size.y;
+        altura = altura * 100;
+        largura = altura / 100f;
+        largura = largura / 2f;
+        maincamera_position.position = new Vector3(0, 0, -1);
+        maincamera.orthographicSize = largura;
+        if(guerreiroesquerdo.balao[0] != null)
+        {
+            for (int i = 0; i <= tamanho_vetor; i++) { // Corrija a condição aqui
+                guerreiroesquerdo.balao[i].SetActive(true);
+            }
+        }
+        gameObject.SetActive(false);
     }
 }
