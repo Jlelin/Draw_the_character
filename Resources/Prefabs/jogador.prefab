@@ -283,7 +283,6 @@ GameObject:
   m_Component:
   - component: {fileID: 7025611313986711318}
   - component: {fileID: -6029757345410936901}
-  - component: {fileID: 4736166819997220115}
   m_Layer: 0
   m_Name: jogador
   m_TagString: Player
@@ -306,6 +305,7 @@ Transform:
   m_Children:
   - {fileID: 519471694239292207}
   - {fileID: 850545351735673827}
+  - {fileID: 4827042232920416521}
   - {fileID: 2979409748525764250}
   - {fileID: 5381628563735918988}
   - {fileID: 3325284893585601870}
@@ -334,19 +334,6 @@ MonoBehaviour:
   SpawnWithObservers: 1
   DontDestroyWithOwner: 0
   AutoObjectParentSync: 1
---- !u!114 &4736166819997220115
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1768262816283155155}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 604c43a16a8b9a349a811cbcb827dd5b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  canvas: {fileID: 5610944077091515549, guid: c8d496783d67b404f82f0a64e94b7d43, type: 3}
 --- !u!1 &2186728013515248788
 GameObject:
   m_ObjectHideFlags: 0
@@ -751,6 +738,51 @@ SpriteRenderer:
   m_WasSpriteAssigned: 0
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!1 &8103406500458556201
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4827042232920416521}
+  - component: {fileID: 8990651395714036465}
+  m_Layer: 0
+  m_Name: GerarCanvas
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4827042232920416521
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8103406500458556201}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 12.245301, y: -0.20803651, z: -5.0478935}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 7025611313986711318}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &8990651395714036465
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8103406500458556201}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 604c43a16a8b9a349a811cbcb827dd5b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  canvas: {fileID: 5610944077091515549, guid: c8d496783d67b404f82f0a64e94b7d43, type: 3}
 --- !u!1001 &684119046751002000
 PrefabInstance:
   m_ObjectHideFlags: 0

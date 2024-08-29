@@ -81,12 +81,12 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 2
-  m_Sprite: {fileID: -953840715076786415, guid: d001d8540d09c924196f825cd2029a97, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 2dd971448a6376946a15d7bd2ceb89c0, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
-  m_Size: {x: 1.78, y: 1.71}
+  m_Size: {x: 2.56, y: 2.56}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
@@ -159,6 +159,10 @@ MonoBehaviour:
   moverid:
     m_InternalValue: 0
   mover: {fileID: 0}
+  instanciadeguerreiros: []
+  jogadores: []
+  warriorfathertransform: {fileID: 0}
+  corpoRigido: {fileID: 0}
   corpo_rigido: {fileID: 0}
   velocidade: 0.5
   velocidadeRotacao: 0.5
@@ -199,8 +203,8 @@ PolygonCollider2D:
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 1.78, y: 1.94}
-    newSize: {x: 1.78, y: 1.71}
+    oldSize: {x: 2.56, y: 2.56}
+    newSize: {x: 2.56, y: 2.56}
     adaptiveTilingThreshold: 0.5
     drawMode: 0
     adaptiveTiling: 0
@@ -298,7 +302,6 @@ MonoBehaviour:
   guerreiroPrincipal: {fileID: 0}
   posicaodamira: {x: 0, y: 0, z: 0}
   warriorfunction: {fileID: 0}
-  arrastarbotaocentral: {fileID: 0}
 --- !u!114 &8267056988812866282
 MonoBehaviour:
   m_ObjectHideFlags: 0
