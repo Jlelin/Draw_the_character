@@ -765,7 +765,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: eb66d705871c0f043bdc64a32b9b596b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerUI: {fileID: 0}
+  playerUI: {fileID: 6278757570438589982}
   botoesguerreiro: {fileID: 8118441709190150305, guid: 35c84cc165de5d3478b235e551bc18ae, type: 3}
   pergaminho: {fileID: 6454925670860996652, guid: 37972a69134b40d419d0bc27a4df2449, type: 3}
   botoesguerreiroActive:
