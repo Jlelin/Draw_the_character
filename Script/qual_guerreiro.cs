@@ -2,8 +2,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Cinemachine;
+using Unity.Netcode;
+using System;
 
-public class qual_guerreiro : MonoBehaviour
+public class qual_guerreiro : NetworkBehaviour
 {
     public delegate void atualizarbalaoselecionado(int balaoselecionado);
     public static event atualizarbalaoselecionado atualizoubalaoselecionado;
@@ -17,8 +19,17 @@ public class qual_guerreiro : MonoBehaviour
 
     void Awake()
     {
-       
-        guerreirodireito = Object.FindFirstObjectByType<qual_guerreirodireito>();
+        guerreirodireito = FindFirstObjectByType<qual_guerreirodireito>();
+        GameObject jogador = GameObject.FindGameObjectWithTag("Player");
+        var tamanho = 1;
+        for(int contador = 0; contador < jogador.transform.childCount; contador++)
+        {
+            if(jogador.transform.GetChild(contador).name.Contains("tag"))
+            {
+                balao_diferentesguerreiros_vetor[tamanho-1] = jogador.transform.GetChild(contador).gameObject;
+                tamanho++;
+            }
+        }
         balao_atualizar();
     }    
 

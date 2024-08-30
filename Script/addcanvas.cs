@@ -35,7 +35,7 @@ public class addcanvas : NetworkBehaviour
     public override void OnNetworkSpawn()
     {
         base.OnNetworkSpawn();
-        if(IsClient)
+        if(IsClient && !IsHost && !IsServer)
         {
             instanciarcanvasServerRpc();
         }
@@ -51,6 +51,7 @@ public class addcanvas : NetworkBehaviour
                     canvasnetwork.Spawn();
                     canvasnetwork.transform.SetParent(jogadorlocal.transform, false);
                     foiinstanciado = true;
+                    StartCoroutine(aguardandocanvas(jogadorlocal));
                     break;
                 }
             }
@@ -60,7 +61,7 @@ public class addcanvas : NetworkBehaviour
         {
             if(jogadorlocal.GetComponent<NetworkObject>().OwnerClientId == NetworkManager.Singleton.LocalClientId)
             {
-                if(IsClient)
+                if(IsClient && !IsHost && !IsServer)
                 {
                     StartCoroutine(aguardandocanvas(jogadorlocal));
                 }

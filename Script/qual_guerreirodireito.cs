@@ -21,6 +21,16 @@ public class qual_guerreirodireito : MonoBehaviour
     void Awake()
     {
         guerreiroesquerdo = Object.FindFirstObjectByType<qual_guerreiro>();
+        GameObject jogador = GameObject.FindGameObjectWithTag("Player");
+        var tamanho = 1;
+        for(int contador = 0; contador < jogador.transform.childCount; contador++)
+        {
+            if(jogador.transform.GetChild(contador).name.Contains("tag"))
+            {
+                balao_dguerreiros[tamanho-1] = jogador.transform.GetChild(contador).gameObject;
+                tamanho++;
+            }
+        }
     }
     // Start is called before the first frame update
     void Start()

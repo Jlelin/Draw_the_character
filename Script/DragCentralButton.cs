@@ -293,6 +293,15 @@ public class DragCentralButton : NetworkBehaviour, IPointerDownHandler, IPointer
                         }
                         if(IsServer)
                         {
+                            jogadores = GameObject.FindGameObjectsWithTag("Player");
+                            foreach(GameObject jogadorserver in jogadores)
+                            {
+                                if(jogadorserver.GetComponent<NetworkObject>().IsOwnedByServer)
+                                {
+                                    var canvas = jogadorserver.transform.Find("Canvas(Clone)");
+                                    ataquebutton = canvas.transform.Find("Ataque(Clone)").gameObject;
+                                }
+                            }
                             guerreiroInstanciado = Instantiate(guerreiro, fixedPosition, Quaternion.identity, paiinstanciado.transform);
                             instanciaguerreiro = guerreiroInstanciado.GetComponent<NetworkObject>();
                             avoID.Value = jogador.GetComponent<NetworkObject>().NetworkObjectId;
@@ -538,8 +547,8 @@ public class DragCentralButton : NetworkBehaviour, IPointerDownHandler, IPointer
                                         }
                                     }
                                 }
-                                var gunBow = canvas.transform.Find("Ataque").GetComponent<gunbow>();
-                                var atackButton = canvas.transform.Find("Ataque").GetComponent<atackbutton>();
+                                var gunBow = canvas.transform.Find("Ataque(Clone)").GetComponent<gunbow>();
+                                var atackButton = canvas.transform.Find("Ataque(Clone)").GetComponent<atackbutton>();
                                 atackButton.enabled = false;
                                 gunBow.mira = miranetwork.gameObject;
                                 var desenrolado = canvas.transform.Find("mascara para pergaminho desenrolado");
@@ -640,6 +649,15 @@ public class DragCentralButton : NetworkBehaviour, IPointerDownHandler, IPointer
     {
         if (NetworkManager.Singleton.SpawnManager.SpawnedObjects.TryGetValue(guerreiroID, out var guerreironetworkobject))
         {
+            jogadores = GameObject.FindGameObjectsWithTag("Player");
+            foreach(GameObject jogadorserver in jogadores)
+            {
+                if(jogadorserver.GetComponent<NetworkObject>().OwnerClientId == NetworkManager.Singleton.LocalClientId)
+                {
+                    var canvas = jogadorserver.transform.Find("Canvas(Clone)");
+                    ataquebutton = canvas.transform.Find("Ataque(Clone)").gameObject;
+                }
+            }
             var movimentar = guerreironetworkobject.GetComponent<movimentar>();
             FixedJoystick fixedjoystick = joystick.GetComponent<FixedJoystick>();
             movimentar.mover = fixedjoystick;

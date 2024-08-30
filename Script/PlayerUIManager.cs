@@ -49,37 +49,48 @@ public class PlayerUIManager : NetworkBehaviour
         // Executa apenas no cliente
         if (IsClient)
         {
-            foreach (GameObject obj in GameObject.FindGameObjectsWithTag("Player"))
+            foreach (GameObject jogador in GameObject.FindGameObjectsWithTag("Player"))
             {
-                NetworkObject objrede = obj.GetComponent<NetworkObject>();
+                NetworkObject jogadorrede = jogador.GetComponent<NetworkObject>();
 
                 // Ignora o cliente local
-                if (objrede.OwnerClientId == NetworkManager.Singleton.LocalClientId)
+                if (jogadorrede.OwnerClientId == NetworkManager.Singleton.LocalClientId)
                 {
                     continue;
                 }
 
                 // Ajuste da UI do outro cliente
-                Transform canvasobject = obj.transform.Find("Canvas(Clone)");
-                playerUI = canvasobject.GetComponent<Canvas>();
-                playerUI.enabled = false;
+                Transform canvasobject = jogador.transform.Find("Canvas(Clone)");
+                playerUI = canvasobject?.GetComponent<Canvas>();
+                if(playerUI != null)
+                {
+                    playerUI.enabled = false;
+                }
 
-                Transform desenrolado = canvasobject.transform.Find("mascara para pergaminho desenrolado");
-                botoesguerreiro = desenrolado.gameObject;
-                botoesguerreiro.SetActive(botoesguerreiroActive.Value);
+                Transform desenrolado = canvasobject?.transform.Find("mascara para pergaminho desenrolado");
+                botoesguerreiro = desenrolado?.gameObject;
+                botoesguerreiro?.SetActive(botoesguerreiroActive.Value);
 
-                Image pergaminhoenrolado = botoesguerreiro.GetComponent<Image>();
-                pergaminhoenrolado.enabled = pergaminhoDesenroladoEnabled.Value;
+                Image pergaminhoenrolado = botoesguerreiro?.GetComponent<Image>();
+                if(pergaminhoenrolado != null)
+                {
+                    pergaminhoenrolado.enabled = pergaminhoDesenroladoEnabled.Value;
+                }
 
-                Transform enrolado = canvasobject.transform.Find("pergaminho enrolado");
-                pergaminho = enrolado.GetComponent<UnityEngine.UI.Image>();
-                pergaminho.enabled = pergaminhoEnroladoEnabled.Value;
+
+                Transform enrolado = canvasobject?.transform.Find("pergaminho enrolado");
+                pergaminho = enrolado?.GetComponent<UnityEngine.UI.Image>();
+                if(pergaminho != null)
+                {
+                    pergaminho.enabled = pergaminhoEnroladoEnabled.Value;
+                }
             }
         }
 
         // Executa apenas no servidor
         if (IsServer)
         {
+
             botoesguerreiroActive.Value = botoesguerreiro.activeSelf;
             pergaminhoEnroladoEnabled.Value = pergaminho.enabled;
         }

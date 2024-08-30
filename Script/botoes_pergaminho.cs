@@ -192,23 +192,19 @@ public class botoes_pergaminho : MonoBehaviour
     {
         Vector3 posicaoCentral = botao1.transform.position;
         Vector3 posicaobotao2 = botao2.transform.position;
-
-        // Atualizar o botaocentral antes de iniciar a animação
         botaocentral = botao2;
-
-        // Iniciar a animação
         StartCoroutine(botaocentralanimacao(posicaoCentral, 0.0625f)); // Duração de 0.5 segundos para a animação
-
-        // Trocar a posição do outro botão de forma instantânea (ou você pode animar isso também)
         botao1.transform.position = posicaobotao2;
         botao2.transform.position = posicaoCentral;
     }
 
     GameObject TrocarPosicoes(GameObject botao1, GameObject botao2)
     {
+
         Vector3 tempPos = botao1.transform.position;
         botao1.transform.position = botao2.transform.position;
         botao2.transform.position = tempPos;
         return botao2;
+
     }
 }

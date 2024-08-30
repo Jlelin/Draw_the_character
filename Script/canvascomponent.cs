@@ -128,7 +128,7 @@ public class canvascomponent : NetworkBehaviour
                 warriorfunction.ataque = instanciaataque;
                 foreach(GameObject jogador in jogadores)
                 {
-                    if(jogador.GetComponent<NetworkObject>().OwnerClientId == NetworkManager.Singleton.LocalClientId)
+                    if(jogador.GetComponent<NetworkObject>().IsOwnedByServer)
                     {
                         jogadorlocal = jogador;
                         var macasradesenrolado = this.transform.Find("mascara para pergaminho desenrolado");
@@ -147,9 +147,12 @@ public class canvascomponent : NetworkBehaviour
                         var focofunctionobject = jogadorlocal.transform.Find("focofunction");
                         var focofunctionscript = focofunctionobject.GetComponent<foco_function>();
                         focofunctionscript.ataque = instanciaataque;
-                        var gunbowscript = ataquenetwork.GetComponent<gunbow>();
-                        gunbowscript.scriptwarrior = warrior;
-                        ataquenetwork.gameObject.SetActive(false);
+                        var gunbowscript = ataquenetwork?.GetComponent<gunbow>();
+                        if(gunbowscript != null)
+                        {
+                            gunbowscript.scriptwarrior = warrior;
+                        }
+                        ataquenetwork?.gameObject.SetActive(false);
                         var atirar = this.transform.Find("atirar").gameObject;
                         focofunctionscript.atirar = atirar;
                         var left = this.transform.Find("Select Left").gameObject;

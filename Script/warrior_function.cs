@@ -37,6 +37,14 @@ public class warrior_function : NetworkBehaviour
         mira.SetActive(false);
         proibidoatacar.SetActive(false);
         proibidoatirar.SetActive(false);
+        GameObject[] jogadores = GameObject.FindGameObjectsWithTag("Player");
+        foreach (GameObject jogadorlocal in jogadores)
+        {
+            if(jogadorlocal.GetComponent<NetworkObject>().OwnerClientId == NetworkManager.Singleton.LocalClientId)
+            {
+                cinemachine = jogadorlocal.transform.Find("character_camera").gameObject;
+            }
+        }
     }
     // Start is called before the first frame update
     void Start()
@@ -146,6 +154,7 @@ public class warrior_function : NetworkBehaviour
                                 {
                                     ataque.GetComponent<gunbow>().enabled = false;
                                 }
+                                cinemachinecamera = cinemachine.GetComponent<CinemachineVirtualCamera>();
                                 cinemachinecamera.Follow = instanciaguerreiro.transform;
                                 balaorenderer.sortingOrder = orderinlayer;
                                 constraints = instanciaguerreiro.GetComponent<Rigidbody2D>();
@@ -166,7 +175,7 @@ public class warrior_function : NetworkBehaviour
                 {
                     for(int o = 0; o < guerreiroesquerdo.balao.Length; o++)
                     {
-                        var canvas = jogadorlocal.transform.Find("Canvas");
+                        var canvas = jogadorlocal.transform.Find("Canvas(Clone)");
                         var warrior = canvas.transform.Find("warrior");
                         var scriptwarrior = warrior.GetComponent<warrior_function>();
                         if(scriptwarrior.guerreiros.Length > 0)
