@@ -113,6 +113,14 @@ public class warrior_function : NetworkBehaviour
                         {
                             if((instanciaguerreiro.CompareTag("guerreiroarqueiro") && instanciaguerreiro.IsSpawned == true) || (instanciaguerreiro.CompareTag("guerreirosniper") && instanciaguerreiro.IsSpawned == true))
                             {
+                                var canvas = jogadorlocal.transform.Find("Canvas(Clone)").gameObject;
+                                for(int contador = 0; contador < canvas.transform.childCount; contador++)
+                                {
+                                    if(canvas.transform.GetChild(contador).gameObject.name.Contains("Ataque(Clone)"))
+                                    {
+                                        ataque = canvas.transform.GetChild(contador).gameObject;
+                                    }
+                                }
                                 ataque.SetActive(true);
                             }
                             indices = 1;

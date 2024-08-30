@@ -90,9 +90,11 @@ public class PlayerUIManager : NetworkBehaviour
         // Executa apenas no servidor
         if (IsServer)
         {
-
-            botoesguerreiroActive.Value = botoesguerreiro.activeSelf;
-            pergaminhoEnroladoEnabled.Value = pergaminho.enabled;
+            if(botoesguerreiro != null && pergaminho != null)
+            {
+                botoesguerreiroActive.Value = botoesguerreiro.activeSelf;
+                pergaminhoEnroladoEnabled.Value = pergaminho.enabled;
+            }
         }
     }
 }

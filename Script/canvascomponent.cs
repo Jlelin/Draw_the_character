@@ -12,7 +12,7 @@ public class canvascomponent : NetworkBehaviour
     public GameObject ataque;
     private GameObject instanciaataque, instanciaataqueserver, jogadorlocal, warrior;
     private NetworkObject ataquenetwork, ataquenetworkserver;
-    private static bool bastaumavez, clientrpcnotificarsobrevaloresdecanvasaconteceu;
+    private static bool bastaumavez, clientrpcnotificarsobrevaloresdecanvasaconteceu, ataqueficafalseumavez;
     void Awake()
     {
 
@@ -67,7 +67,11 @@ public class canvascomponent : NetworkBehaviour
         focofunctionscript.ataque = instanciaataque;
         var gunbowscript = ataquenetwork.GetComponent<gunbow>();
         gunbowscript.scriptwarrior = warrior;
-        ataquenetwork.gameObject.SetActive(false);
+        if(!ataqueficafalseumavez)
+        {
+            ataquenetwork.gameObject.SetActive(false);
+            ataqueficafalseumavez = true;
+        }
         var atirar = this.transform.Find("atirar").gameObject;
         focofunctionscript.atirar = atirar;
         var left = this.transform.Find("Select Left").gameObject;
@@ -152,7 +156,7 @@ public class canvascomponent : NetworkBehaviour
                         {
                             gunbowscript.scriptwarrior = warrior;
                         }
-                        ataquenetwork?.gameObject.SetActive(false);
+                        //ataquenetwork?.gameObject.SetActive(false);
                         var atirar = this.transform.Find("atirar").gameObject;
                         focofunctionscript.atirar = atirar;
                         var left = this.transform.Find("Select Left").gameObject;
@@ -189,7 +193,7 @@ public class canvascomponent : NetworkBehaviour
         var gunbowscript = ataquenetworkserver.GetComponent<gunbow>();
         scriptwarriortemvalor += gunbowscript.receberscriptwarrior;
         gunbowscript.scriptwarrior = warrior;
-        ataquenetworkserver.gameObject.SetActive(false);
+        //ataquenetworkserver.gameObject.SetActive(false);
     }
 
     [ServerRpc(RequireOwnership = false)]
