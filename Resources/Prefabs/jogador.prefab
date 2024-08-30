@@ -317,7 +317,7 @@ GameObject:
   - component: {fileID: 3325284893585601870}
   - component: {fileID: 4839156428081140644}
   m_Layer: 0
-  m_Name: guerreiroselecionado_0
+  m_Name: tag_desarmado
   m_TagString: guerreirodesarmado
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -401,7 +401,7 @@ GameObject:
   - component: {fileID: 2979409748525764250}
   - component: {fileID: 872899921244969633}
   m_Layer: 0
-  m_Name: balaoespada_vermelhodiferente_0
+  m_Name: tag_espada
   m_TagString: guerreiroescudoespada
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -553,7 +553,7 @@ GameObject:
   - component: {fileID: 6788265764039570926}
   - component: {fileID: 5509795993979375362}
   m_Layer: 0
-  m_Name: arqueirobalao_0
+  m_Name: tag_arqueiro
   m_TagString: guerreiroarqueiro
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -637,7 +637,7 @@ GameObject:
   - component: {fileID: 5381628563735918988}
   - component: {fileID: 5638553220840377592}
   m_Layer: 0
-  m_Name: balao_armadovermelho_0
+  m_Name: tag_sniper
   m_TagString: guerreirosniper
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -829,7 +829,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 827127076836359926, guid: 58d0c3c3b7ae68c4b8769e4639d02959, type: 3}
       propertyPath: m_Name
-      value: guerreiroselecionado_0
+      value: tag_desarmado
       objectReference: {fileID: 0}
     - target: {fileID: 827127076836359926, guid: 58d0c3c3b7ae68c4b8769e4639d02959, type: 3}
       propertyPath: m_IsActive
@@ -902,7 +902,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1019430270752999250, guid: 7c3942807461f0c43a870f57cf60bd99, type: 3}
       propertyPath: m_Name
-      value: balaoespada_vermelhodiferente_0
+      value: tag_espada
       objectReference: {fileID: 0}
     - target: {fileID: 1019430270752999250, guid: 7c3942807461f0c43a870f57cf60bd99, type: 3}
       propertyPath: m_IsActive
@@ -975,7 +975,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 173540329970875872, guid: b53b9f1164ffac74eb5bcdb7e5cf9282, type: 3}
       propertyPath: m_Name
-      value: arqueirobalao_0
+      value: tag_arqueiro
       objectReference: {fileID: 0}
     - target: {fileID: 173540329970875872, guid: b53b9f1164ffac74eb5bcdb7e5cf9282, type: 3}
       propertyPath: m_IsActive
@@ -1040,7 +1040,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 2264887485068159822, guid: db23103800b63304bb2c6728eba06471, type: 3}
       propertyPath: m_Name
-      value: balao_armadovermelho_0
+      value: tag_sniper
       objectReference: {fileID: 0}
     - target: {fileID: 2264887485068159822, guid: db23103800b63304bb2c6728eba06471, type: 3}
       propertyPath: m_IsActive

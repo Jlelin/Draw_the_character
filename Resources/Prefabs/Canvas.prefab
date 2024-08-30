@@ -355,10 +355,10 @@ MonoBehaviour:
   balaobrancodesarmado: {fileID: 9027708485696749824, guid: 48b7a6050d3d1e742a874118e1768f17, type: 3}
   balaoarqueiro: {fileID: -8113320040737293488, guid: c8d29e9c9d274b5408a6fd9036404d77, type: 3}
   balao_vermelho:
-  - {fileID: -7013845138266442130, guid: fe36ac863c765104fae9bdcb99b88797, type: 3}
-  - {fileID: -2900602871074374976, guid: ae07e1c230e5fd4459ff744e3c8604b4, type: 3}
-  - {fileID: 4758130003344039901, guid: cde65a8f2a7256647a1f866b9a93a18a, type: 3}
-  - {fileID: 8773689824803601199, guid: a1c6de10254429c458e2cc7dca84fce7, type: 3}
+  - {fileID: 21300000, guid: 7c55226dcb901794194a2dfc8b6fc0b9, type: 3}
+  - {fileID: 21300000, guid: d98bb270ea3daed439e61e56ab8cc5a3, type: 3}
+  - {fileID: 21300000, guid: d604667abba7a124395019645fccf1d1, type: 3}
+  - {fileID: 21300000, guid: a70f3cf3b1ddd5c448c87882cd9a317d, type: 3}
   ultimo_elemento: 0
   apertado_botao: 0
   guardar_n: 0
@@ -1223,10 +1223,10 @@ MonoBehaviour:
   balaobrancodesarmado: {fileID: 9027708485696749824, guid: 48b7a6050d3d1e742a874118e1768f17, type: 3}
   balaoarqueiro: {fileID: -8113320040737293488, guid: c8d29e9c9d274b5408a6fd9036404d77, type: 3}
   balao_diferentesguerreiros:
-  - {fileID: -1100033667296600052, guid: 0a551f79f7ab2a041b1b57ea31ede37c, type: 3}
-  - {fileID: -2900602871074374976, guid: ae07e1c230e5fd4459ff744e3c8604b4, type: 3}
-  - {fileID: 21300000, guid: 8d598f65c52672b41b3b76782265a704, type: 3}
-  - {fileID: -8303568797860856909, guid: cb5a9b2569269c848933bee012fe9c7e, type: 3}
+  - {fileID: 21300000, guid: 3e919628c2768ea438f5342bb9670173, type: 3}
+  - {fileID: 21300000, guid: a70f3cf3b1ddd5c448c87882cd9a317d, type: 3}
+  - {fileID: 21300000, guid: f58dcc108e616fd4eb27ca9897301299, type: 3}
+  - {fileID: 21300000, guid: b916d342571001d49a6fc11cc347985b, type: 3}
   apertado_botao: 0
   balao_selecionado: 0
   guardarbaloes: 0

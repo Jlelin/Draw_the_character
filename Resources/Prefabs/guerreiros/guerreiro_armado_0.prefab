@@ -17,7 +17,7 @@ GameObject:
   - component: {fileID: 16509282471049963}
   - component: {fileID: 8819526082365854489}
   - component: {fileID: 8267056988812866282}
-  - component: {fileID: -5264105460690885843}
+  - component: {fileID: 3242412530882448514}
   m_Layer: 0
   m_Name: guerreiro_armado_0
   m_TagString: guerreirosniper
@@ -315,7 +315,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   characterlife: 10
---- !u!114 &-5264105460690885843
+--- !u!114 &3242412530882448514
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -324,7 +324,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 6633831846231117623}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e96cb6065543e43c4a752faaa1468eb1, type: 3}
+  m_Script: {fileID: 11500000, guid: cc1df3fab46dbc8489331afe8a31bf02, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   UseUnreliableDeltas: 0

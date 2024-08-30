@@ -17,7 +17,7 @@ GameObject:
   - component: {fileID: 2342498445513881137}
   - component: {fileID: 8010527257366467572}
   - component: {fileID: 4231092245598505107}
-  - component: {fileID: -6092689870095628283}
+  - component: {fileID: -8744482916408914896}
   m_Layer: 0
   m_Name: arqueiro_0
   m_TagString: guerreiroarqueiro
@@ -517,7 +517,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   characterlife: 10
---- !u!114 &-6092689870095628283
+--- !u!114 &-8744482916408914896
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -526,7 +526,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 5220735918095783696}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e96cb6065543e43c4a752faaa1468eb1, type: 3}
+  m_Script: {fileID: 11500000, guid: cc1df3fab46dbc8489331afe8a31bf02, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   UseUnreliableDeltas: 0
