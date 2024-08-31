@@ -12,7 +12,7 @@ public class canvascomponent : NetworkBehaviour
     public GameObject ataque;
     private GameObject instanciaataque, instanciaataqueserver, jogadorlocal, warrior;
     private NetworkObject ataquenetwork, ataquenetworkserver;
-    private static bool bastaumavez, clientrpcnotificarsobrevaloresdecanvasaconteceu, ataqueficafalseumavez;
+    private static bool bastaumavez, clientrpcnotificarsobrevaloresdecanvasaconteceu, ataqueficafalseumavez, warriorfunctiontemvalor;
     void Awake()
     {
 
@@ -170,7 +170,12 @@ public class canvascomponent : NetworkBehaviour
                         {
                             gunbowscript.scriptwarrior = warrior;
                         }
-                        //ataquenetwork?.gameObject.SetActive(false);
+                        if(!warriorfunctiontemvalor)
+                        {
+                            scriptwarriortemvalor += gunbowscript.receberscriptwarrior;
+                            scriptwarriortemvalor?.Invoke();
+                            warriorfunctiontemvalor = true;
+                        }
                         var atirar = this.transform.Find("atirar").gameObject;
                         focofunctionscript.atirar = atirar;
                         var left = this.transform.Find("Select Left").gameObject;

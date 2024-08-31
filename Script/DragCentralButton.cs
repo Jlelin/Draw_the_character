@@ -6,8 +6,7 @@ using System;
 using Unity.Netcode;
 using System.Linq;
 using System.Collections.Generic;
-
-
+using Cinemachine;
 public class DragCentralButton : NetworkBehaviour, IPointerDownHandler, IPointerUpHandler, IDragHandler
 {
     public static NetworkVariable<ulong> warriorfatherdoclienteID = new NetworkVariable<ulong>();
@@ -41,6 +40,8 @@ public class DragCentralButton : NetworkBehaviour, IPointerDownHandler, IPointer
     public qual_guerreirodireito guerreirodireito;
     public warrior_function warriorfunction;
     public sowrdshieldfight escudoespadaluta;
+
+    private movimentar movimento;
     public NetworkObject jogador, networkObjectguerreiro;
     public int tamanhototal  = 0;
     private string tagCentral;
@@ -267,10 +268,10 @@ public class DragCentralButton : NetworkBehaviour, IPointerDownHandler, IPointer
         {
             if (guerreiro.CompareTag(tagCentral))
             {
-                foreach(GameObject obj in GameObject.FindGameObjectsWithTag("Player"))
+                foreach(GameObject jogador in GameObject.FindGameObjectsWithTag("Player"))
                 {
-                    NetworkObject objrede = obj.GetComponent<NetworkObject>();
-                    if(objrede.OwnerClientId == NetworkManager.Singleton.LocalClientId)
+                    NetworkObject jogadorrede = jogador.GetComponent<NetworkObject>();
+                    if(jogadorrede.OwnerClientId == NetworkManager.Singleton.LocalClientId)
                     {
                         if(IsClient && !IsHost)
                         {
@@ -327,12 +328,13 @@ public class DragCentralButton : NetworkBehaviour, IPointerDownHandler, IPointer
                             if(instanciaguerreiro.CompareTag("guerreiroarqueiro") || instanciaguerreiro.CompareTag("guerreirosniper"))
                             {
                                 mirainstance = Instantiate(mira);
+                                gunbow.mira = mirainstance;
                                 instanciamira = mirainstance.GetComponent<NetworkObject>();
-                                objrede = obj.GetComponent<NetworkObject>();
-                                if(objrede.OwnerClientId == NetworkManager.Singleton.LocalClientId)
+                                jogadorrede = jogador.GetComponent<NetworkObject>();
+                                if(jogadorrede.OwnerClientId == NetworkManager.Singleton.LocalClientId)
                                 {
-                                    instanciamira.SpawnWithOwnership(objrede.OwnerClientId);
-                                    instanciamira.transform.SetParent(objrede.transform, true);    
+                                    instanciamira.SpawnWithOwnership(jogadorrede.OwnerClientId);
+                                    instanciamira.transform.SetParent(jogadorrede.transform, true);    
                                 }
                                 if(instanciaguerreiro.CompareTag("guerreiroarqueiro") || instanciaguerreiro.CompareTag("guerreirosniper"))
                                 {
@@ -342,8 +344,7 @@ public class DragCentralButton : NetworkBehaviour, IPointerDownHandler, IPointer
                                 }
                                 if (mira != null)
                                 {
-                                    movimentar movimento = instanciaguerreiro.GetComponent<movimentar>();
-                                    movimento.miraId.Value = mira.GetComponent<NetworkObject>().NetworkObjectId;
+                                    movimento = instanciaguerreiro.GetComponent<movimentar>();
                                 }
                                 guerreiroID.Value = instanciaguerreiro.NetworkObjectId;
                                 miraID.Value = instanciamira.NetworkObjectId;
@@ -390,7 +391,12 @@ public class DragCentralButton : NetworkBehaviour, IPointerDownHandler, IPointer
                     joystick.SetActive(true);
                     botaodedesenho.SetActive(true);
                     pergaminho_enrolado.SetActive(false);
-                    desenrolado.SetActive(false);
+                    var scrollbar = desenrolado.transform.Find("Scrollbar").gameObject;
+                    scrollbar.GetComponent<Scrollbar>().enabled = false;
+                    scrollbar.GetComponent<Image>().enabled = false;
+                    var slidingarea = scrollbar.transform.Find("Sliding Area");
+                    var handle = slidingarea.transform.Find("Handle");
+                    handle.GetComponent<Image>().enabled = false;
                     break;
                 }
                 if(IsServer)
@@ -404,17 +410,22 @@ public class DragCentralButton : NetworkBehaviour, IPointerDownHandler, IPointer
                     }
                     guerreiroesquerdo.balao[tamanhototal] = balaoInstanciado;
                     guerreiroesquerdo.balao_atualizar();
+                    avoID.Value = jogador.NetworkObjectId;
+                    guerreiroID.Value = instanciaguerreiro.NetworkObjectId;
+                    notificarclientsaboutguerreiroswarriorfunciontserverClientRpc(avoID.Value, guerreiroID.Value, tagCentral);
+                    if(instanciaguerreiro.CompareTag("guerreirosniper") || instanciaguerreiro.CompareTag("guerreiroarqueiro"))
+                    {
+                        movimento.miraId.Value = mira.GetComponent<NetworkObject>().NetworkObjectId;
+                        var canvas = jogador.transform.Find("Canvas(Clone)");
+                        warrior = canvas.transform.Find("warrior").gameObject;
+                        var warriorfunction = warrior.GetComponent<warrior_function>();
+                        warriorfunction.cinemachinecamera = jogador.transform.Find("character_camera").gameObject.GetComponent<CinemachineVirtualCamera>();
+                        observarmira.arrastarbotaocentral = this;
+                        StartCoroutine(aguardarclickwarrior(warriorfunction));
+                    }
                     break;
                 }
             }
-        }
-
-        
-        if(IsServer)
-        {
-            avoID.Value = jogador.NetworkObjectId;
-            guerreiroID.Value = instanciaguerreiro.NetworkObjectId;
-            notificarclientsaboutguerreiroswarriorfunciontserverClientRpc(avoID.Value, guerreiroID.Value, tagCentral);
         }
         if (guerreiroInstanciado == null || balaoInstanciado == null)
         {
@@ -431,7 +442,12 @@ public class DragCentralButton : NetworkBehaviour, IPointerDownHandler, IPointer
             joystick.SetActive(true);
             botaodedesenho.SetActive(true);
             pergaminho_enrolado.SetActive(false);
-            desenrolado.SetActive(false);
+            var scrollbar = desenrolado.transform.Find("Scrollbar").gameObject;
+            scrollbar.GetComponent<Scrollbar>().enabled = false;
+            scrollbar.GetComponent<Image>().enabled = false;
+            var slidingarea = scrollbar.transform.Find("Sliding Area");
+            var handle = slidingarea.transform.Find("Handle");
+            handle.GetComponent<Image>().enabled = false;
             if(IsClient && !IsHost)
             {
                 Balao balaoScript = balaoInstanciado.GetComponent<Balao>();
@@ -457,6 +473,15 @@ public class DragCentralButton : NetworkBehaviour, IPointerDownHandler, IPointer
                 }
             }
         }
+    }
+
+    private IEnumerator aguardarclickwarrior(warrior_function warriorfunction)
+    {
+        while(warriorfunction.cinemachinecamera.Follow == null)
+        {
+            yield return null;
+        }
+        observarmira.atribuirvalorawarriorfunctionviadragcentralbutton();
     }
     [ClientRpc]
     private void valoresdoguerreirodetiroClientRpc(ulong miraID, ulong guerreiroID)
@@ -547,10 +572,9 @@ public class DragCentralButton : NetworkBehaviour, IPointerDownHandler, IPointer
                                         }
                                     }
                                 }
-                                var gunBow = canvas.transform.Find("Ataque(Clone)").GetComponent<gunbow>();
                                 var atackButton = canvas.transform.Find("Ataque(Clone)").GetComponent<atackbutton>();
                                 atackButton.enabled = false;
-                                gunBow.mira = miranetwork.gameObject;
+                                gunbow.mira = miranetwork.gameObject;
                                 var desenrolado = canvas.transform.Find("mascara para pergaminho desenrolado");
                                 var scrollbar = desenrolado.transform.Find("Scrollbar");
                                 var slidingarea = scrollbar.transform.Find("Sliding Area");
@@ -582,14 +606,24 @@ public class DragCentralButton : NetworkBehaviour, IPointerDownHandler, IPointer
                                     {
                                         if(canvas.GetChild(contador).gameObject.activeSelf)
                                         {
-                                            canvas.GetChild(contador).gameObject.SetActive(false);
+                                            scrollbar = canvas.GetChild(contador).Find("Scrollbar");
+                                            scrollbar.GetComponent<Scrollbar>().enabled = false;
+                                            scrollbar.GetComponent<Image>().enabled = false;
+                                            slidingarea = scrollbar.transform.Find("Sliding Area");
+                                            handle = slidingarea.transform.Find("Handle");
+                                            handle.GetComponent<Image>().enabled = false;
                                         }
                                     }
                                     if(canvas.GetChild(contador).gameObject.name.Contains("Ataque"))
                                     {
                                         if(canvas.GetChild(contador).gameObject.activeSelf)
                                         {
-                                            canvas.GetChild(contador).gameObject.SetActive(false);
+                                            scrollbar = canvas.GetChild(contador).Find("Scrollbar");
+                                            scrollbar.GetComponent<Scrollbar>().enabled = false;
+                                            scrollbar.GetComponent<Image>().enabled = false;
+                                            slidingarea = scrollbar.transform.Find("Sliding Area");
+                                            handle = slidingarea.transform.Find("Handle");
+                                            handle.GetComponent<Image>().enabled = false;
                                         }
                                     }
                                 }
@@ -727,7 +761,12 @@ public class DragCentralButton : NetworkBehaviour, IPointerDownHandler, IPointer
                 {
                     if(canvas.GetChild(contador).gameObject.activeSelf)
                     {
-                        canvas.GetChild(contador).gameObject.SetActive(false);
+                        scrollbar = canvas.GetChild(contador).Find("Scrollbar");
+                        scrollbar.GetComponent<Scrollbar>().enabled = false;
+                        scrollbar.GetComponent<Image>().enabled = false;
+                        slidingarea = scrollbar.transform.Find("Sliding Area");
+                        handle = slidingarea.transform.Find("Handle");
+                        handle.GetComponent<Image>().enabled = false;
                     }
                 }
             }
@@ -783,7 +822,12 @@ public class DragCentralButton : NetworkBehaviour, IPointerDownHandler, IPointer
                         }
                     }
                 }
-                desenrolado.SetActive(false);
+                var scrollbar = desenrolado.transform.Find("Scrollbar");
+                scrollbar.GetComponent<Scrollbar>().enabled = false;
+                scrollbar.GetComponent<Image>().enabled = false;
+                var slidingarea = scrollbar.transform.Find("Sliding Area");
+                var handle = slidingarea.transform.Find("Handle");
+                handle.GetComponent<Image>().enabled = false;
             }
         }
     }

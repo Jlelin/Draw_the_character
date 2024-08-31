@@ -9,7 +9,8 @@ public class gunbow : NetworkBehaviour, IPointerDownHandler, IPointerUpHandler
     public NetworkVariable<ulong> avodID = new NetworkVariable<ulong>();
     private int apertado_botao;
     public static int contador;
-    public GameObject mira, scriptwarrior, atirar, ataque, jogadorobject;
+    public GameObject scriptwarrior, atirar, ataque, jogadorobject;
+    public static GameObject mira;
     public NetworkObject jogador;
     private PolygonCollider2D polygoncolliderenemy;
     private CircleCollider2D circlecolliderenemy;
@@ -182,13 +183,17 @@ public class gunbow : NetworkBehaviour, IPointerDownHandler, IPointerUpHandler
 
     public void receberscriptwarrior()
     {
-        GameObject[] jogadores = GameObject.FindGameObjectsWithTag("Player");
-        foreach(GameObject jogador in jogadores)
+        warriorfunction = scriptwarrior.GetComponent<warrior_function>();
+        if(IsClient && !IsHost && !IsServer)
         {
-            if(jogador.GetComponent<NetworkObject>().OwnerClientId == NetworkManager.Singleton.LocalClientId)
+            GameObject[] jogadores = GameObject.FindGameObjectsWithTag("Player");
+            foreach(GameObject jogador in jogadores)
             {
-                var canvas = jogador.transform.Find("Canvas(Clone)").gameObject;
-                StartCoroutine(aguardandoataquecliente(canvas, jogador));
+                if(jogador.GetComponent<NetworkObject>().OwnerClientId == NetworkManager.Singleton.LocalClientId)
+                {
+                    var canvas = jogador.transform.Find("Canvas(Clone)").gameObject;
+                    StartCoroutine(aguardandoataquecliente(canvas, jogador));
+                }
             }
         }
     }
