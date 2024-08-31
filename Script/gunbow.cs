@@ -46,26 +46,54 @@ public class gunbow : NetworkBehaviour, IPointerDownHandler, IPointerUpHandler
             if (Input.touchCount > 0)
             {
                 Touch touch = Input.GetTouch(0);
-                contador++;
-                // Define a posição da mira e ativa ela após um frame
-                for (int i = 0; i < warriorfunction.guerreiros.Length; i++)
+                if(IsServer)
                 {
-                    if(IsServer)
+                    contador++;
+                    // Define a posição da mira e ativa ela após um frame
+                    for (int i = 0; i < warriorfunction.guerreiros.Length; i++)
                     {
-                        warrior_function.guerreirosID.Value = warriorfunction.guerreiros[i].GetComponent<NetworkObject>().NetworkObjectId;
+                        if(IsServer)
+                        {
+                            warrior_function.guerreirosID.Value = warriorfunction.guerreiros[i].GetComponent<NetworkObject>().NetworkObjectId;
+                        }
+                        guerreirodowarriorfunction = NetworkManager.Singleton.SpawnManager.SpawnedObjects[warrior_function.guerreirosID.Value];
+                        movimento = guerreirodowarriorfunction.GetComponent<movimentar>();
+                        if (movimento.enabled == true)
+                        {
+                            movimento.enabled = false;
+                            guerreiro = warriorfunction.guerreiros[i].transform.position;
+                            miras = guerreiro;
+                            mira.transform.position = miras; // Define a posição da mira
+                            
+                            // Força a atualização da cena
+                            StartCoroutine(ActivateMiraAfterUpdate());
+                            break;
+                        }
                     }
-                    guerreirodowarriorfunction = NetworkManager.Singleton.SpawnManager.SpawnedObjects[warrior_function.guerreirosID.Value];
-                    movimento = guerreirodowarriorfunction.GetComponent<movimentar>();
-                    if (movimento.enabled == true)
+                }
+                else
+                {
+                    contador++;
+                    // Define a posição da mira e ativa ela após um frame
+                    for (int i = 0; i < warriorfunction.guerreiros.Length; i++)
                     {
-                        movimento.enabled = false;
-                        guerreiro = warriorfunction.guerreiros[i].transform.position;
-                        miras = guerreiro;
-                        mira.transform.position = miras; // Define a posição da mira
-                        
-                        // Força a atualização da cena
-                        StartCoroutine(ActivateMiraAfterUpdate());
-                        break;
+                        if(IsServer)
+                        {
+                            warrior_function.guerreirosID.Value = warriorfunction.guerreiros[i].GetComponent<NetworkObject>().NetworkObjectId;
+                        }
+                        guerreirodowarriorfunction = NetworkManager.Singleton.SpawnManager.SpawnedObjects[warrior_function.guerreirosID.Value];
+                        movimento = guerreirodowarriorfunction.GetComponent<movimentar>();
+                        if (movimento.enabled == true)
+                        {
+                            movimento.enabled = false;
+                            guerreiro = warriorfunction.guerreiros[i].transform.position;
+                            miras = guerreiro;
+                            mira.transform.position = miras; // Define a posição da mira
+                            
+                            // Força a atualização da cena
+                            StartCoroutine(ActivateMiraAfterUpdate());
+                            break;
+                        }
                     }
                 }
             }
@@ -154,7 +182,30 @@ public class gunbow : NetworkBehaviour, IPointerDownHandler, IPointerUpHandler
 
     public void receberscriptwarrior()
     {
-        warriorfunction = scriptwarrior.GetComponent<warrior_function>();
+        GameObject[] jogadores = GameObject.FindGameObjectsWithTag("Player");
+        foreach(GameObject jogador in jogadores)
+        {
+            if(jogador.GetComponent<NetworkObject>().OwnerClientId == NetworkManager.Singleton.LocalClientId)
+            {
+                var canvas = jogador.transform.Find("Canvas(Clone)").gameObject;
+                StartCoroutine(aguardandoataquecliente(canvas, jogador));
+            }
+        }
+    }
+    
+
+    private IEnumerator aguardandoataquecliente(GameObject canvas, GameObject jogador)
+    {
+        var ataque = canvas.transform.Find("Ataque(Clone)")?.gameObject;
+        var warrior = canvas.transform.Find("warrior").gameObject;
+        while(ataque == null)
+        {
+            ataque = canvas.transform.Find("Ataque(Clone)")?.gameObject;
+            yield return null;
+        }
+        scriptwarrior = warrior;
+        var ataquescript = ataque.GetComponent<gunbow>();
+        ataquescript.warriorfunction = scriptwarrior.GetComponent<warrior_function>();
     }
 
     private IEnumerator ActivateMiraAfterUpdate()

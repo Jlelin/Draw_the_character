@@ -5,11 +5,11 @@ using UnityEngine;
 
 public class observarmira : NetworkBehaviour
 {
-    private Transform guerreirocinemachine;
+    private static Transform guerreirocinemachine;
     public static GameObject mira;
-    public Transform guerreiroPrincipal;
+    private static Transform guerreiroPrincipal;
     public Vector3 posicaodamira; // Referência ao transform do guerreiro principal
-    public warrior_function warriorfunction;
+    public static warrior_function warriorfunction;
     public static DragCentralButton arrastarbotaocentral;
 
     private float initialAngle = 90f; // Ângulo inicial do guerreiro principal (olhando para a direita)
@@ -21,6 +21,22 @@ public class observarmira : NetworkBehaviour
     }
 
     void Start()
+    {
+
+    }
+
+    void Update()
+    {
+        StartCoroutine(aguardandomira());
+    }
+
+    public void guardarposicaomira()
+    {
+        mira.transform.position = gunbow.miras;
+        posicaodamira = mira.transform.position;
+    }
+
+    public static void atribuirvalorawarriorfunctionviadragcentralbutton()
     {
         warriorfunction = arrastarbotaocentral.warrior.GetComponent<warrior_function>();
         // Define a rotação inicial do guerreiro principal para olhar para a direita
@@ -37,8 +53,12 @@ public class observarmira : NetworkBehaviour
         }
     }
 
-    void Update()
+    private IEnumerator aguardandomira()
     {
+        while(mira == null)
+        {
+            yield return null;
+        }
         // Verifica se a mira está ativada
         if (mira.activeSelf)
         {
@@ -60,10 +80,5 @@ public class observarmira : NetworkBehaviour
             }
         }
     }
-
-    public void guardarposicaomira()
-    {
-        mira.transform.position = gunbow.miras;
-        posicaodamira = mira.transform.position;
-    }
+    
 }

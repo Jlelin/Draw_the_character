@@ -31,16 +31,56 @@ public class movimentar : NetworkBehaviour
 
     private void FixedUpdate()
     {
-        // Verifique se a mira também está definida e tem um NetworkObject antes de continuar
-        /*if (DragCentralButton.instanciamira != null)
-        {
-            NetworkObject miraNetworkObject = DragCentralButton.instanciamira.GetComponent<NetworkObject>();
+        StartCoroutine(aguardandomover());
+    }
+    private void mover_character()
+    {
+        float moverH = mover.Horizontal;
+        float moverV = mover.Vertical;
+        Vector2 direcao = new Vector2(moverH, moverV).normalized;
+        corpo_rigido.velocity = direcao * velocidade;
+    }
 
-            if (miraNetworkObject != null)
-            {
-                if (NetworkManager.Singleton.LocalClientId != miraNetworkObject.OwnerClientId) return;
-            }
-        }*/
+    private void movercamera()
+    {
+        mover_character();
+    }
+
+    private GameObject GetMiraObject()
+    {
+        if (miraId.Value != 0 && NetworkManager.Singleton.SpawnManager.SpawnedObjects.TryGetValue(miraId.Value, out NetworkObject miraObject))
+        {
+            return miraObject.gameObject;
+        }
+        return null;
+    }
+
+    // Método para rotacionar o personagem suavemente em direção ao joystick
+    private void RotacionarPersonagem()
+    {
+        // Verifica se o joystick está sendo movido
+        if (mover.input != Vector2.zero)
+        {
+            // Calcula o ângulo desejado com base na direção do joystick
+            float angle = Mathf.Atan2(mover.input.y, mover.input.x) * Mathf.Rad2Deg;
+
+            // Corrige o ângulo para alinhar corretamente com a direção do joystick
+            angle -= 90f; // Ajuste para corrigir a orientação
+
+            // Atualiza a variável graus com o valor calculado
+            graus = angle;
+
+            // Aplica a rotação ao personagem diretamente
+            transform.eulerAngles = new Vector3(0, 0, graus);
+        }
+    }
+
+    private IEnumerator aguardandomover()
+    {
+        while(mover == null)
+        {
+            yield return null;
+        }
         jogadores = GameObject.FindGameObjectsWithTag("Player");
         foreach(GameObject jogador in jogadores)
         {
@@ -77,45 +117,4 @@ public class movimentar : NetworkBehaviour
             }
         }
     }
-    private void mover_character()
-    {
-        float moverH = mover.Horizontal;
-        float moverV = mover.Vertical;
-        Vector2 direcao = new Vector2(moverH, moverV).normalized;
-        corpo_rigido.velocity = direcao * velocidade;
-    }
-
-    private void movercamera()
-    {
-        mover_character();
-    }
-
-    private GameObject GetMiraObject()
-    {
-        if (miraId.Value != 0 && NetworkManager.Singleton.SpawnManager.SpawnedObjects.TryGetValue(miraId.Value, out NetworkObject miraObject))
-        {
-            return miraObject.gameObject;
-        }
-        return null;
-    }
-
-    // Método para rotacionar o personagem suavemente em direção ao joystick
-private void RotacionarPersonagem()
-{
-    // Verifica se o joystick está sendo movido
-    if (mover.input != Vector2.zero)
-    {
-        // Calcula o ângulo desejado com base na direção do joystick
-        float angle = Mathf.Atan2(mover.input.y, mover.input.x) * Mathf.Rad2Deg;
-
-        // Corrige o ângulo para alinhar corretamente com a direção do joystick
-        angle -= 90f; // Ajuste para corrigir a orientação
-
-        // Atualiza a variável graus com o valor calculado
-        graus = angle;
-
-        // Aplica a rotação ao personagem diretamente
-        transform.eulerAngles = new Vector3(0, 0, graus);
-    }
-}
 }

@@ -529,7 +529,7 @@ public class DragCentralButton : NetworkBehaviour, IPointerDownHandler, IPointer
                         {
                             if(guerreironetwork.CompareTag("guerreiroarqueiro") || guerreironetwork.CompareTag("guerreirosniper"))
                             {    
-                                var canvas = jogador.transform.Find("Canvas");
+                                var canvas = jogador.transform.Find("Canvas(Clone)");
                                 for(int contador=0; contador< canvas.childCount; contador++)
                                 {
                                     if(canvas.GetChild(contador).gameObject.name.Contains("mascara"))
@@ -843,7 +843,7 @@ public class DragCentralButton : NetworkBehaviour, IPointerDownHandler, IPointer
                             instanciamira = mirainstance.GetComponent<NetworkObject>();
                             instanciamira.SpawnWithOwnership(jogadorlocalnetwork.OwnerClientId);
                             instanciamira.transform.SetParent(jogadorlocal.transform, true);    
-                            var canvas = jogador.transform.Find("Canvas");
+                            var canvas = jogadorlocal.transform.Find("Canvas(Clone)");
                             for(int contador=0; contador< canvas.childCount; contador++)
                             {
                                 if(canvas.GetChild(contador).gameObject.name.Contains("mascara"))

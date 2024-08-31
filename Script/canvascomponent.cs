@@ -108,9 +108,23 @@ public class canvascomponent : NetworkBehaviour
             jogadores = GameObject.FindGameObjectsWithTag("Player");
             if(IsServer && !bastaumavez)
             {
+                GameObject canvas = null;
+                foreach(GameObject jogador in jogadores)
+                {
+                    if(jogador.GetComponent<NetworkObject>().IsOwnedByServer)
+                    {
+                       canvas = jogador.transform.Find("Canvas(Clone)").gameObject; 
+                    }
+                }
                 instanciaataque = Instantiate(ataque, this.transform);
                 ataquenetwork = instanciaataque.GetComponent<NetworkObject>();
                 ataquenetwork.Spawn();
+                var warrior = canvas.transform.Find("warrior");
+                RectTransform warriorRectTransform = warrior.GetComponent<RectTransform>();
+                RectTransform ataqueRectTransform = ataquenetwork.GetComponent<RectTransform>();
+                ataqueRectTransform.anchoredPosition = warriorRectTransform.anchoredPosition;
+                ataqueRectTransform.sizeDelta = warriorRectTransform.sizeDelta;
+                ataquenetwork.transform.localScale = warrior.localScale;
                 ataquenetwork.transform.SetParent(this.transform, false);
                 bastaumavez = true;
             }
@@ -192,8 +206,32 @@ public class canvascomponent : NetworkBehaviour
         focofunctionscript.ataque = instanciaataqueserver;
         var gunbowscript = ataquenetworkserver.GetComponent<gunbow>();
         scriptwarriortemvalor += gunbowscript.receberscriptwarrior;
+        if(IsClient && !IsHost && !IsServer)
+        {
+            GameObject[] jogadores = GameObject.FindGameObjectsWithTag("Player");
+            foreach(GameObject jogadorlocal in jogadores)
+            {
+                if(jogadorlocal.GetComponent<NetworkObject>().OwnerClientId == NetworkManager.Singleton.LocalClientId)
+                {
+                    var canvasjogadorlocal = jogadorlocal.transform.Find("Canvas(Clone)")?.gameObject;
+                    while(canvasjogadorlocal == null)
+                    {
+                        canvasjogadorlocal = jogadorlocal.transform.Find("Canvas(Clone)")?.gameObject;
+                        yield return null;
+                    }
+                    var warriorlocal = canvasjogadorlocal.transform.Find("warrior");
+                    instanciaataque = canvasjogadorlocal.transform.Find("Ataque(Clone)")?.gameObject;
+                    while(instanciaataque == null)
+                    {
+                        instanciaataque = canvasjogadorlocal.transform.Find("Ataque(Clone)")?.gameObject;
+                        yield return null;
+                    }
+                    gunbowscript = instanciaataque.GetComponent<gunbow>();
+                }
+            }
+        }
         gunbowscript.scriptwarrior = warrior;
-        //ataquenetworkserver.gameObject.SetActive(false);
+        scriptwarriortemvalor?.Invoke();
     }
 
     [ServerRpc(RequireOwnership = false)]
@@ -211,9 +249,23 @@ public class canvascomponent : NetworkBehaviour
                     instanciaataque = Instantiate(ataque, canvas.transform);
                     ataquenetwork = instanciaataque.GetComponent<NetworkObject>();
                     ataquenetwork.SpawnWithOwnership(clientId);
+                    
+                    // Acessa o RectTransform de ataquenetwork
+                    RectTransform ataqueRectTransform = ataquenetwork.GetComponent<RectTransform>();
+
+                    // Acessa o RectTransform de warrior
+                    var warrior = canvas.transform.Find("warrior");
+                    RectTransform warriorRectTransform = warrior.GetComponent<RectTransform>();
+
+                    // Copia posição, largura e altura
+                    ataqueRectTransform.anchoredPosition = warriorRectTransform.anchoredPosition;
+                    ataqueRectTransform.sizeDelta = warriorRectTransform.sizeDelta;
+                    ataquenetwork.transform.localScale = warrior.localScale;
+                    // Define como filho de canvas
                     ataquenetwork.transform.SetParent(canvas.transform, false);
                 }
             }
+
         }
     }
 
