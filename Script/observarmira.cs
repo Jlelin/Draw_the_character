@@ -27,6 +27,7 @@ public class observarmira : NetworkBehaviour
 
     void Update()
     {
+        StartCoroutine(aguardandomiralocal());
         StartCoroutine(aguardandomira());
     }
 
@@ -40,16 +41,12 @@ public class observarmira : NetworkBehaviour
     {
         warriorfunction = arrastarbotaocentral.warrior.GetComponent<warrior_function>();
         // Define a rotação inicial do guerreiro principal para olhar para a direita
-        for (int i = 0; i < warriorfunction.guerreiros.Length; i++)
+        guerreirocinemachine = warrior_function.instanciaguerreiro.transform;
+        if (warrior_function.cinemachinecamera.Follow == guerreirocinemachine)
         {
-            guerreirocinemachine = warriorfunction.guerreiros[i].transform;
-            if (warriorfunction.cinemachinecamera.Follow == guerreirocinemachine)
-            {
-                guerreiroPrincipal = warriorfunction.guerreiros[i].transform;
-
-                // Define a rotação inicial para olhar para a direita
-                guerreiroPrincipal.rotation = Quaternion.Euler(new Vector3(0, 0, -90)); // Olhando para a direita
-            }
+            guerreiroPrincipal = guerreirocinemachine;
+            // Define a rotação inicial para olhar para a direita
+            guerreiroPrincipal.rotation = Quaternion.Euler(new Vector3(0, 0, -90)); // Olhando para a direita
         }
     }
 
@@ -81,4 +78,26 @@ public class observarmira : NetworkBehaviour
         }
     }
     
+    private IEnumerator aguardandomiralocal()
+    {
+        if(mira != null)
+        {
+            if(mira.GetComponent<NetworkObject>().OwnerClientId != NetworkManager.Singleton.LocalClientId)
+            {
+                mira = null;
+            }
+        }
+        while(mira == null)
+        {
+            GameObject[] jogadores = GameObject.FindGameObjectsWithTag("Player");
+            foreach(GameObject jogador in jogadores)
+            {
+                if(jogador.GetComponent<NetworkObject>().OwnerClientId == NetworkManager.Singleton.LocalClientId)
+                {
+                    mira = jogador.transform.Find("mira_0(Clone)")?.gameObject;
+                }
+            }
+            yield return null;
+        }
+    }
 }

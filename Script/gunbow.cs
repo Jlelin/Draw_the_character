@@ -78,21 +78,10 @@ public class gunbow : NetworkBehaviour, IPointerDownHandler, IPointerUpHandler
                     // Define a posição da mira e ativa ela após um frame
                     for (int i = 0; i < warriorfunction.guerreiros.Length; i++)
                     {
-                        if(IsServer)
+                        atribuirvaloraguerreiroIDServerRpc(warriorfunction.guerreiros[i].GetComponent<NetworkObject>().NetworkObjectId);
+                        StartCoroutine(aguardandoguerreiroID(i));
+                        if(warrior_function.guerreirosID.Value == 0 || warrior_function.guerreirosID.Value != 0)
                         {
-                            warrior_function.guerreirosID.Value = warriorfunction.guerreiros[i].GetComponent<NetworkObject>().NetworkObjectId;
-                        }
-                        guerreirodowarriorfunction = NetworkManager.Singleton.SpawnManager.SpawnedObjects[warrior_function.guerreirosID.Value];
-                        movimento = guerreirodowarriorfunction.GetComponent<movimentar>();
-                        if (movimento.enabled == true)
-                        {
-                            movimento.enabled = false;
-                            guerreiro = warriorfunction.guerreiros[i].transform.position;
-                            miras = guerreiro;
-                            mira.transform.position = miras; // Define a posição da mira
-                            
-                            // Força a atualização da cena
-                            StartCoroutine(ActivateMiraAfterUpdate());
                             break;
                         }
                     }
@@ -118,7 +107,7 @@ public class gunbow : NetworkBehaviour, IPointerDownHandler, IPointerUpHandler
                         warrior_function.guerreirosID.Value = warriorfunction.guerreiros[i].GetComponent<NetworkObject>().NetworkObjectId;
                     }
                     guerreirodowarriorfunction = NetworkManager.Singleton.SpawnManager.SpawnedObjects[warrior_function.guerreirosID.Value];
-                    if (warriorfunction.cinemachinecamera.Follow == guerreirocinemachine)
+                    if (warrior_function.cinemachinecamera.Follow == guerreirocinemachine)
                     {
                         guerreirodowarriorfunction.GetComponent<movimentar>().enabled = true;
                     }
@@ -217,6 +206,24 @@ public class gunbow : NetworkBehaviour, IPointerDownHandler, IPointerUpHandler
     {
         yield return null; // Aguarda um frame para garantir que a posição foi atualizada
         mira.SetActive(true); // Ativa a mira após um frame
+    }
+
+    private IEnumerator aguardandoguerreiroID(int i)
+    {
+        while(warrior_function.guerreirosID.Value == 0)
+        {
+            yield return null;
+        }
+        guerreirodowarriorfunction = NetworkManager.Singleton.SpawnManager.SpawnedObjects[warrior_function.guerreirosID.Value];
+        movimento = guerreirodowarriorfunction.GetComponent<movimentar>();
+        if (movimento.enabled == true)
+        {
+            movimento.enabled = false;
+            guerreiro = warriorfunction.guerreiros[i].transform.position;
+            miras = guerreiro;
+            mira.transform.position = miras; // Define a posição da mira
+            StartCoroutine(ActivateMiraAfterUpdate());
+        }
     }
 
     [ServerRpc]

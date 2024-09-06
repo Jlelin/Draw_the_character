@@ -232,11 +232,17 @@ public class canvascomponent : NetworkBehaviour
                         yield return null;
                     }
                     gunbowscript = instanciaataque.GetComponent<gunbow>();
+                    gunbowscript.scriptwarrior = warrior;
+                    scriptwarriortemvalor?.Invoke();
+                }
+                if(jogadorlocal.GetComponent<NetworkObject>().OwnerClientId < NetworkManager.Singleton.LocalClientId)
+                {
+                    var canvasidmenor = jogadorlocal.transform.Find("Canvas(Clone)").gameObject;
+                    var scriptrodadoemclienteanteriorgunbow = canvasidmenor.transform.Find("Ataque(Clone)").GetComponent<gunbow>();
+                    scriptrodadoemclienteanteriorgunbow.scriptwarrior = warrior;
                 }
             }
         }
-        gunbowscript.scriptwarrior = warrior;
-        scriptwarriortemvalor?.Invoke();
     }
 
     [ServerRpc(RequireOwnership = false)]

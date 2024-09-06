@@ -79,7 +79,7 @@ public class gunbowatack : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
         for (int i = 0; i < warriorfunction.guerreiros.Length; i++)
         {
             guerreirocinemachine = warriorfunction.guerreiros[i].transform;
-            if (warriorfunction.cinemachinecamera.Follow == guerreirocinemachine)
+            if (warrior_function.cinemachinecamera.Follow == guerreirocinemachine)
             {
                 guerreiroPrincipal = warriorfunction.guerreiros[i].transform;
                 distancia_entreguerreiro_emira = guerreiroPrincipal.position - miratransform.position;

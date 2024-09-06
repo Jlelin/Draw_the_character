@@ -13,7 +13,7 @@ public class warrior_function : NetworkBehaviour
     public qual_guerreiro guerreiroesquerdo;
     public qual_guerreirodireito guerreirodireito;
     public GameObject cinemachine, botaofoco, esquerdo, direito, selectwarrior, atirar, proibidoatirar, proibidoatacar;
-    public CinemachineVirtualCamera cinemachinecamera;
+    public static CinemachineVirtualCamera cinemachinecamera;
     public GameObject[] guerreiros, jogadores;
     public GameObject botaodesenho, ataque, mira;
     public Transform[] warriorschild, filhosdewarriorfatherfilhos;
@@ -164,6 +164,7 @@ public class warrior_function : NetworkBehaviour
                                 }
                                 cinemachinecamera = cinemachine.GetComponent<CinemachineVirtualCamera>();
                                 cinemachinecamera.Follow = instanciaguerreiro.transform;
+                                observarmira.atribuirvalorawarriorfunctionviadragcentralbutton();
                                 balaorenderer.sortingOrder = orderinlayer;
                                 constraints = instanciaguerreiro.GetComponent<Rigidbody2D>();
                                 constraints.constraints &= ~(RigidbodyConstraints2D.FreezePositionX | RigidbodyConstraints2D.FreezePositionY);

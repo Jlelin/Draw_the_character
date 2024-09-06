@@ -391,12 +391,7 @@ public class DragCentralButton : NetworkBehaviour, IPointerDownHandler, IPointer
                     joystick.SetActive(true);
                     botaodedesenho.SetActive(true);
                     pergaminho_enrolado.SetActive(false);
-                    var scrollbar = desenrolado.transform.Find("Scrollbar").gameObject;
-                    scrollbar.GetComponent<Scrollbar>().enabled = false;
-                    scrollbar.GetComponent<Image>().enabled = false;
-                    var slidingarea = scrollbar.transform.Find("Sliding Area");
-                    var handle = slidingarea.transform.Find("Handle");
-                    handle.GetComponent<Image>().enabled = false;
+                    desenrolado.SetActive(false);
                     break;
                 }
                 if(IsServer)
@@ -419,9 +414,8 @@ public class DragCentralButton : NetworkBehaviour, IPointerDownHandler, IPointer
                         var canvas = jogador.transform.Find("Canvas(Clone)");
                         warrior = canvas.transform.Find("warrior").gameObject;
                         var warriorfunction = warrior.GetComponent<warrior_function>();
-                        warriorfunction.cinemachinecamera = jogador.transform.Find("character_camera").gameObject.GetComponent<CinemachineVirtualCamera>();
+                        warrior_function.cinemachinecamera = jogador.transform.Find("character_camera").gameObject.GetComponent<CinemachineVirtualCamera>();
                         observarmira.arrastarbotaocentral = this;
-                        StartCoroutine(aguardarclickwarrior(warriorfunction));
                     }
                     break;
                 }
@@ -442,12 +436,7 @@ public class DragCentralButton : NetworkBehaviour, IPointerDownHandler, IPointer
             joystick.SetActive(true);
             botaodedesenho.SetActive(true);
             pergaminho_enrolado.SetActive(false);
-            var scrollbar = desenrolado.transform.Find("Scrollbar").gameObject;
-            scrollbar.GetComponent<Scrollbar>().enabled = false;
-            scrollbar.GetComponent<Image>().enabled = false;
-            var slidingarea = scrollbar.transform.Find("Sliding Area");
-            var handle = slidingarea.transform.Find("Handle");
-            handle.GetComponent<Image>().enabled = false;
+            desenrolado.SetActive(false);
             if(IsClient && !IsHost)
             {
                 Balao balaoScript = balaoInstanciado.GetComponent<Balao>();
@@ -473,15 +462,6 @@ public class DragCentralButton : NetworkBehaviour, IPointerDownHandler, IPointer
                 }
             }
         }
-    }
-
-    private IEnumerator aguardarclickwarrior(warrior_function warriorfunction)
-    {
-        while(warriorfunction.cinemachinecamera.Follow == null)
-        {
-            yield return null;
-        }
-        observarmira.atribuirvalorawarriorfunctionviadragcentralbutton();
     }
     [ClientRpc]
     private void valoresdoguerreirodetiroClientRpc(ulong miraID, ulong guerreiroID)
@@ -606,24 +586,14 @@ public class DragCentralButton : NetworkBehaviour, IPointerDownHandler, IPointer
                                     {
                                         if(canvas.GetChild(contador).gameObject.activeSelf)
                                         {
-                                            scrollbar = canvas.GetChild(contador).Find("Scrollbar");
-                                            scrollbar.GetComponent<Scrollbar>().enabled = false;
-                                            scrollbar.GetComponent<Image>().enabled = false;
-                                            slidingarea = scrollbar.transform.Find("Sliding Area");
-                                            handle = slidingarea.transform.Find("Handle");
-                                            handle.GetComponent<Image>().enabled = false;
+                                            canvas.GetChild(contador).gameObject.SetActive(false);
                                         }
                                     }
                                     if(canvas.GetChild(contador).gameObject.name.Contains("Ataque"))
                                     {
                                         if(canvas.GetChild(contador).gameObject.activeSelf)
                                         {
-                                            scrollbar = canvas.GetChild(contador).Find("Scrollbar");
-                                            scrollbar.GetComponent<Scrollbar>().enabled = false;
-                                            scrollbar.GetComponent<Image>().enabled = false;
-                                            slidingarea = scrollbar.transform.Find("Sliding Area");
-                                            handle = slidingarea.transform.Find("Handle");
-                                            handle.GetComponent<Image>().enabled = false;
+                                            canvas.GetChild(contador).gameObject.SetActive(false);
                                         }
                                     }
                                 }
@@ -761,12 +731,7 @@ public class DragCentralButton : NetworkBehaviour, IPointerDownHandler, IPointer
                 {
                     if(canvas.GetChild(contador).gameObject.activeSelf)
                     {
-                        scrollbar = canvas.GetChild(contador).Find("Scrollbar");
-                        scrollbar.GetComponent<Scrollbar>().enabled = false;
-                        scrollbar.GetComponent<Image>().enabled = false;
-                        slidingarea = scrollbar.transform.Find("Sliding Area");
-                        handle = slidingarea.transform.Find("Handle");
-                        handle.GetComponent<Image>().enabled = false;
+                        canvas.GetChild(contador).gameObject.SetActive(false);
                     }
                 }
             }
@@ -822,12 +787,7 @@ public class DragCentralButton : NetworkBehaviour, IPointerDownHandler, IPointer
                         }
                     }
                 }
-                var scrollbar = desenrolado.transform.Find("Scrollbar");
-                scrollbar.GetComponent<Scrollbar>().enabled = false;
-                scrollbar.GetComponent<Image>().enabled = false;
-                var slidingarea = scrollbar.transform.Find("Sliding Area");
-                var handle = slidingarea.transform.Find("Handle");
-                handle.GetComponent<Image>().enabled = false;
+                desenrolado.SetActive(false);
             }
         }
     }
