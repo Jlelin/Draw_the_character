@@ -44,7 +44,6 @@ public class botaodesenho : NetworkBehaviour
                     foco.apertado_botao = 1;
                     foco.Update();
                     foco.apertado_botao = 0;
-
                     // Ativa os GameObjects e Image
                     pergamnihoenrolado.SetActive(true);
                     papelaberto.SetActive(true);

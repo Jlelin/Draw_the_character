@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.Netcode;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class foco_function : NetworkBehaviour
 {
@@ -15,7 +16,7 @@ public class foco_function : NetworkBehaviour
     public Camera maincamera;
     public SpriteRenderer terreno;
     public GameObject warriorobject, botaofoco, ataque, esquerdo, direito, selectwarrior, botaodesenho, atirar;
-    public GameObject mira;
+    public GameObject mira, charactercamera;
     private int tamanho_vetor; // Mova a declaração para o escopo da classe
     public float largura, altura;
 
@@ -25,15 +26,13 @@ public class foco_function : NetworkBehaviour
         warrior = Object.FindFirstObjectByType<warrior_function>();
         networkbutton_manager = NetworkButtonManager.canvasHostClient.GetComponent<NetworkButtonManager>();
         corrigirfocofunction += corrigirfocofunctionn;
-        this.gameObject.SetActive(false);
 
     }
     // Start is called before the first frame update
     void Start()
     {
-
+        StartCoroutine(EsperarBotaofoco());
     }
-
     // Update is called once per frame
     public void Update()
     {
@@ -60,6 +59,16 @@ public class foco_function : NetworkBehaviour
                             if(i < guerreiroesquerdo.balao.Length)
                             {
                                 guerreiroesquerdo.balao[i].SetActive(true);
+                                GameObject[] jogadores = GameObject.FindGameObjectsWithTag("Player");
+                                foreach(GameObject jogador in jogadores)
+                                {
+                                    if(jogador.GetComponent<NetworkObject>().OwnerClientId == NetworkManager.Singleton.LocalClientId)
+                                    {
+                                        charactercamera = jogador.transform.Find("character_camera").gameObject;
+                                        var canvas = jogador.transform.Find("Canvas(Clone)");
+                                        warrior = canvas.transform.Find("warrior").gameObject.GetComponent<warrior_function>();
+                                    }
+                                }
                                 warrior.guerreiros[i].SetActive(false);
                             }
                         }
@@ -76,10 +85,10 @@ public class foco_function : NetworkBehaviour
                     direito.SetActive(true);
                     selectwarrior.SetActive(true);
                     botaodesenho.SetActive(true);
+                    charactercamera.SetActive(false);
                     botaofoco.SetActive(false);
                     apertado_botao = 0;
                     warriorobject.SetActive(true);
-                    gameObject.SetActive(false);
                 }
             }
         }
@@ -120,6 +129,37 @@ public class foco_function : NetworkBehaviour
                 guerreiroesquerdo.balao[i].SetActive(true);
             }
         }
-        gameObject.SetActive(false);
+    }
+
+    IEnumerator EsperarBotaofoco()
+    {
+        // Aguarda até que botaofoco seja atribuído
+        while (botaofoco == null)
+        {
+            yield return null; // Espera até o próximo frame para verificar novamente
+        }
+
+        // Selecione o EventTrigger do botaofoco
+        EventTrigger trigger = botaofoco.GetComponent<EventTrigger>();
+
+        if (trigger != null) // Verifica se o EventTrigger existe no botaofoco
+        {
+            // Se já existir o evento PointerDown, adicione a função apertar_botao(1)
+            foreach (var entry in trigger.triggers)
+            {
+                if (entry.eventID == EventTriggerType.PointerDown)
+                {
+                    entry.callback.AddListener((eventData) => { apertar_botao(1); });
+                }
+                else if (entry.eventID == EventTriggerType.PointerUp)
+                {
+                    entry.callback.AddListener((eventData) => { apertar_botao(0); });
+                }
+            }
+        }
+        else
+        {
+            Debug.LogWarning("EventTrigger não encontrado no objeto botaofoco.");
+        }
     }
 }
