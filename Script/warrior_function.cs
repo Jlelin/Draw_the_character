@@ -164,7 +164,10 @@ public class warrior_function : NetworkBehaviour
                                 }
                                 cinemachinecamera = cinemachine.GetComponent<CinemachineVirtualCamera>();
                                 cinemachinecamera.Follow = instanciaguerreiro.transform;
-                                observarmira.atribuirvalorawarriorfunctionviadragcentralbutton();
+                                if(instanciaguerreiro.CompareTag("guerreiroarqueiro") || instanciaguerreiro.CompareTag("guerreirosniper"))
+                                {
+                                    observarmira.atribuirvalorawarriorfunctionviadragcentralbutton();
+                                }
                                 balaorenderer.sortingOrder = orderinlayer;
                                 constraints = instanciaguerreiro.GetComponent<Rigidbody2D>();
                                 constraints.constraints &= ~(RigidbodyConstraints2D.FreezePositionX | RigidbodyConstraints2D.FreezePositionY);

@@ -42,10 +42,6 @@ public class PlayerUIManager : NetworkBehaviour
             pergaminho = enrolado.GetComponent<UnityEngine.UI.Image>();
             pergaminho.enabled = pergaminhoEnroladoEnabled.Value;
         }
-    }
-
-    void Update()
-    {
         // Executa apenas no cliente
         if (IsClient)
         {
@@ -96,5 +92,10 @@ public class PlayerUIManager : NetworkBehaviour
                 pergaminhoEnroladoEnabled.Value = pergaminho.enabled;
             }
         }
+    }
+
+    void Update()
+    {
+
     }
 }

@@ -64,8 +64,6 @@ public class gunbow : NetworkBehaviour, IPointerDownHandler, IPointerUpHandler
                             movimento.enabled = false;
                             guerreiro = warriorfunction.guerreiros[i].transform.position;
                             miras = guerreiro;
-                            mira.transform.position = miras; // Define a posição da mira
-                            
                             // Força a atualização da cena
                             StartCoroutine(ActivateMiraAfterUpdate());
                             break;
@@ -205,6 +203,15 @@ public class gunbow : NetworkBehaviour, IPointerDownHandler, IPointerUpHandler
     private IEnumerator ActivateMiraAfterUpdate()
     {
         yield return null; // Aguarda um frame para garantir que a posição foi atualizada
+        GameObject[] jogadores = GameObject.FindGameObjectsWithTag("Player");
+        foreach(GameObject jogador in jogadores)
+        {
+            if(jogador.GetComponent<NetworkObject>().OwnerClientId == NetworkManager.Singleton.LocalClientId)
+            {
+                mira = jogador.transform.Find("mira_0(Clone)").gameObject;
+            }
+        }
+        mira.transform.position = miras;
         mira.SetActive(true); // Ativa a mira após um frame
     }
 
