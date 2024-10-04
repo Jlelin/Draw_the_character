@@ -743,6 +743,9 @@ public class DragCentralButton : NetworkBehaviour, IPointerDownHandler, IPointer
     {
         ulong clientId = rpcParams.Receive.SenderClientId;
         todosobjetos = FindObjectsOfType<GameObject>(true);
+        GameObject[] objetosdesenrolados = new GameObject[] {null};
+        int tamanhoparadesenrolados = 1;
+        int indiceparadesenrolados = 0;
         foreach(GameObject objeto in todosobjetos)
         {
             if(objeto.CompareTag("desenrolado"))
@@ -750,6 +753,13 @@ public class DragCentralButton : NetworkBehaviour, IPointerDownHandler, IPointer
                 if(!objeto.activeSelf)
                 {
                     objeto.SetActive(true);
+                }
+                else
+                {
+                    Array.Resize(ref objetosdesenrolados, tamanhoparadesenrolados);
+                    objetosdesenrolados[indiceparadesenrolados] = objeto;
+                    indiceparadesenrolados++;
+                    tamanhoparadesenrolados++;
                 }
             }
         }
@@ -787,7 +797,13 @@ public class DragCentralButton : NetworkBehaviour, IPointerDownHandler, IPointer
                         }
                     }
                 }
-                desenrolado.SetActive(false);
+                foreach(GameObject pergaminhodesenrolado in objetosdesenrolados)
+                {
+                    if(pergaminhodesenrolado != desenrolado)
+                    {
+                        desenrolado.SetActive(false);
+                    }
+                }
             }
         }
     }

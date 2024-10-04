@@ -37,7 +37,7 @@ public class toget_ip : MonoBehaviour
         if (localIP != "IP não encontrado")
         {
             UnityTransport utp = NetworkManager.Singleton.GetComponent<UnityTransport>();
-            utp.SetConnectionData(localIP, 7777);
+            //utp.SetConnectionData(localIP, 7777);
         }
     }
 

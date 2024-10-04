@@ -150,9 +150,13 @@ public class warrior_function : NetworkBehaviour
                             {
 
                                 instanciaguerreiro.GetComponent<movimentar>().enabled = true;
-                                if(IsClient)
+                                if(IsClient && !IsHost)
                                 {
                                     notificarservidormovimentartrueServerRpc(instanciaguerreiro.NetworkObjectId);
+                                }
+                                else
+                                {
+                                    ligaroutrosguerreirosClientRpc(instanciaguerreiro.NetworkObjectId);
                                 }
                                 if(instanciaguerreiro.CompareTag("guerreiroarqueiro") || instanciaguerreiro.CompareTag("guerreirosniper"))
                                 {
@@ -313,14 +317,40 @@ public class warrior_function : NetworkBehaviour
        }
     }
 
+    private IEnumerator aguardandojogadorclicarwserver(NetworkObject guerreironetworkobject)
+    {
+        while(!instanciaguerreiro.gameObject.activeSelf)
+        {
+            yield return null;
+        }
+        guerreironetworkobject.gameObject.SetActive(true);
+        guerreironetworkobject.enabled = true;
+        guerreironetworkobject.GetComponent<movimentar>().enabled = true;
+    }
+
+    private IEnumerator aguardandojogadorclicarwclient(NetworkObject guerreironetworkobject)
+    {
+        while(!instanciaguerreiro.gameObject.activeSelf)
+        {
+            yield return null;
+        }
+        guerreironetworkobject.gameObject.SetActive(true);
+    }
+
     [ServerRpc]
     private void notificarservidormovimentartrueServerRpc(ulong guerreiroID)
     {
         if (NetworkManager.Singleton.SpawnManager.SpawnedObjects.TryGetValue(guerreiroID, out var guerreironetworkobject))
         {
-            guerreironetworkobject.gameObject.SetActive(true);
-            guerreironetworkobject.enabled = true;
-            guerreironetworkobject.GetComponent<movimentar>().enabled = true;
+            StartCoroutine(aguardandojogadorclicarwserver(guerreironetworkobject));
+        }
+    }
+    [ClientRpc]
+    private void ligaroutrosguerreirosClientRpc(ulong guerreiroID)
+    {
+        if(NetworkManager.Singleton.SpawnManager.SpawnedObjects.TryGetValue(guerreiroID, out var guerreironetworkobject))
+        {
+            StartCoroutine(aguardandojogadorclicarwclient(guerreironetworkobject));
         }
     }
 
