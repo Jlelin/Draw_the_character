@@ -46,15 +46,6 @@ public class movimentar : NetworkBehaviour
         mover_character();
     }
 
-    private GameObject GetMiraObject()
-    {
-        if (miraId.Value != 0 && NetworkManager.Singleton.SpawnManager.SpawnedObjects.TryGetValue(miraId.Value, out NetworkObject miraObject))
-        {
-            return miraObject.gameObject;
-        }
-        return null;
-    }
-
     // Método para rotacionar o personagem suavemente em direção ao joystick
     private void RotacionarPersonagem()
     {

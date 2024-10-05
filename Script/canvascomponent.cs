@@ -80,7 +80,7 @@ public class canvascomponent : NetworkBehaviour
         focofunctionscript.direito = right;
         var selectwarrior = this.transform.Find("Select Warrior").gameObject;
         focofunctionscript.selectwarrior = selectwarrior;
-        var foco = this.transform.Find("foco").gameObject;
+        var foco = canvas.transform.Find("foco").gameObject;
         focofunctionscript.botaofoco = foco;
     }
 

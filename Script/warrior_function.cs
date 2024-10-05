@@ -148,8 +148,8 @@ public class warrior_function : NetworkBehaviour
                         {
                             if(balaorenderer.sprite == guerreiroesquerdo.balao_diferentesguerreiros[p] || balaorenderer.sprite == guerreirodireito.balao_vermelho[p])
                             {
-
                                 instanciaguerreiro.GetComponent<movimentar>().enabled = true;
+                                foco_function.guerreiroativo = instanciaguerreiro;
                                 if(IsClient && !IsHost)
                                 {
                                     notificarservidormovimentartrueServerRpc(instanciaguerreiro.NetworkObjectId);
@@ -319,22 +319,68 @@ public class warrior_function : NetworkBehaviour
 
     private IEnumerator aguardandojogadorclicarwserver(NetworkObject guerreironetworkobject)
     {
-        while(!instanciaguerreiro.gameObject.activeSelf)
+        if(instanciaguerreiro != null)
         {
-            yield return null;
+            while(!instanciaguerreiro.gameObject.activeSelf)
+            {
+                yield return null;
+            }
+            guerreironetworkobject.gameObject.SetActive(true);
+            guerreironetworkobject.enabled = true;
+            guerreironetworkobject.GetComponent<movimentar>().enabled = true;
+            GameObject[] jogadores = GameObject.FindGameObjectsWithTag("Player");
+            foreach(GameObject jogador in jogadores)
+            {
+                if(jogador.GetComponent<NetworkObject>().OwnerClientId != NetworkManager.Singleton.LocalClientId)
+                {
+                    var warriorfather = jogador.transform.Find("warrior's father(Clone)");
+                    while(warriorfather == null)
+                    {
+                        yield return null;
+                        warriorfather = jogador.transform.Find("warrior's father(Clone)");
+                    }
+                    for(int contador=0; contador < warriorfather.childCount;contador++)
+                    {
+                        if((warriorfather.GetChild(contador).name.Contains("guerreiro") || warriorfather.GetChild(contador).name.Contains("arqueiro"))
+                        && !warriorfather.GetChild(contador).name.Contains("balao"))
+                        {
+                            warriorfather.GetChild(contador).gameObject.SetActive(true);
+                        }
+                    }
+                }
+            }
         }
-        guerreironetworkobject.gameObject.SetActive(true);
-        guerreironetworkobject.enabled = true;
-        guerreironetworkobject.GetComponent<movimentar>().enabled = true;
     }
 
     private IEnumerator aguardandojogadorclicarwclient(NetworkObject guerreironetworkobject)
     {
-        while(!instanciaguerreiro.gameObject.activeSelf)
+        if(instanciaguerreiro != null)
         {
-            yield return null;
+            while(!instanciaguerreiro.gameObject.activeSelf)
+            {
+                yield return null;
+            }
+            foreach(GameObject jogador in jogadores)
+            {
+                if(jogador.GetComponent<NetworkObject>().OwnerClientId != NetworkManager.Singleton.LocalClientId)
+                {
+                    var warriorfather = jogador.transform.Find("warrior's father(Clone)");
+                    while(warriorfather == null)
+                    {
+                        yield return null;
+                        warriorfather = jogador.transform.Find("warrior's father(Clone)");
+                    }
+                    for(int contador=0; contador < warriorfather.childCount;contador++)
+                    {
+                        if((warriorfather.GetChild(contador).name.Contains("guerreiro") || warriorfather.GetChild(contador).name.Contains("arqueiro"))
+                        && !warriorfather.GetChild(contador).name.Contains("balao"))
+                        {
+                            warriorfather.GetChild(contador).gameObject.SetActive(true);
+                        }
+                    }
+                }
+            }
         }
-        guerreironetworkobject.gameObject.SetActive(true);
     }
 
     [ServerRpc]

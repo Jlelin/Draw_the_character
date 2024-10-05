@@ -9,6 +9,8 @@ public class foco_function : NetworkBehaviour
     public delegate void assinantecorrigirfocofunction();
     public event assinantecorrigirfocofunction corrigirfocofunction;
     public int apertado_botao;
+
+    public static NetworkObject guerreiroativo;
     public NetworkButtonManager networkbutton_manager;
     public qual_guerreiro guerreiroesquerdo;
     public warrior_function warrior;
@@ -17,7 +19,7 @@ public class foco_function : NetworkBehaviour
     public SpriteRenderer terreno;
     public GameObject warriorobject, botaofoco, ataque, esquerdo, direito, selectwarrior, botaodesenho, atirar;
     public GameObject mira, charactercamera;
-    private int tamanho_vetor; // Mova a declaração para o escopo da classe
+    private int tamanho_vetor, ativoucoroutine; // Mova a declaração para o escopo da classe
     public float largura, altura;
 
     void Awake()
@@ -68,6 +70,18 @@ public class foco_function : NetworkBehaviour
                                         var canvas = jogador.transform.Find("Canvas(Clone)");
                                         warrior = canvas.transform.Find("warrior").gameObject.GetComponent<warrior_function>();
                                     }
+                                    else
+                                    {
+                                        var warriorfather = jogador.transform.Find("warrior's father(Clone)");
+                                        for(int contador=0; contador < warriorfather.childCount;contador++)
+                                        {
+                                            if((warriorfather.GetChild(contador).name.Contains("guerreiro") || warriorfather.GetChild(contador).name.Contains("arqueiro"))
+                                            && !warriorfather.GetChild(contador).name.Contains("balao"))
+                                            {
+                                                warriorfather.GetChild(contador).gameObject.SetActive(false);
+                                            }
+                                        }
+                                    }
                                 }
                                 warrior.guerreiros[i].SetActive(false);
                             }
@@ -92,7 +106,17 @@ public class foco_function : NetworkBehaviour
                 }
             }
         }
-
+        if(botaofoco != null)
+        {
+            if(botaofoco.activeSelf && guerreiroativo != null && ativoucoroutine < 1)
+            {
+                if(guerreiroativo.gameObject.activeSelf)
+                {
+                    StartCoroutine(enquantoestaativo());
+                    ativoucoroutine++;
+                }
+            }
+        }
     }
 
     public void apertar_botao(int pressionado)
@@ -129,6 +153,29 @@ public class foco_function : NetworkBehaviour
                 guerreiroesquerdo.balao[i].SetActive(true);
             }
         }
+    }
+
+    private IEnumerator enquantoestaativo()
+    {
+        while(guerreiroativo.gameObject.activeSelf)
+        {
+            yield return null;
+            GameObject[] todosobjetos = FindObjectsOfType<GameObject>(true);
+            foreach(GameObject objeto in todosobjetos)
+            {
+                if(botaofoco.activeSelf)
+                {
+                    if((objeto.name.Contains("guerreiro") || objeto.name.Contains("arqueiro")) && !objeto.name.Contains("balao") && !objeto.name.Contains("tag"))
+                    {
+                        if(!objeto.activeSelf)
+                        {
+                            objeto.SetActive(true);
+                        }
+                    }
+                }
+            }
+        }
+        ativoucoroutine = 0;
     }
 
     IEnumerator EsperarBotaofoco()
