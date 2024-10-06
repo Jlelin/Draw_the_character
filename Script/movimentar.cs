@@ -13,11 +13,13 @@ public class movimentar : NetworkBehaviour
     private movimentar movimento;  // Referência local ao script 'movimentar'
     public Joystick mover; // Atualize para Joystick
     public GameObject[] instanciadeguerreiros, jogadores;
+    private GameObject mira;
     public Transform warriorfathertransform;
     public NetworkRigidbody2D corpoRigido;
     public Rigidbody2D corpo_rigido;
     public float velocidade, velocidadeRotacao;
     public float graus; // Variável para armazenar o valor de rotação
+    private Vector2 ultimaDirecao = Vector2.zero;
 
     private void Start()
     {
@@ -41,10 +43,40 @@ public class movimentar : NetworkBehaviour
         corpo_rigido.velocity = direcao * velocidade;
     }
 
-    private void movercamera()
+private void movermira()
+{
+    int direction = mover.GetDirection();
+    if (direction != -1) // Se o joystick está em movimento
     {
-        mover_character();
+        // Converte a direção em ângulo
+        float novoAngulo = direction * (360f / 128f) - 180f; // Converte para ângulo
+        Vector2 novaDirecao = new Vector2(Mathf.Cos(novoAngulo * Mathf.Deg2Rad), Mathf.Sin(novoAngulo * Mathf.Deg2Rad));
+
+        // Verifica se a nova direção é diferente da última direção
+        if (novaDirecao != ultimaDirecao)
+        {
+            // Atualiza a posição da mira com base na nova direção do joystick
+            Vector2 movimentoMira = novaDirecao * velocidade * Time.fixedDeltaTime;
+            mira.transform.position += new Vector3(movimentoMira.x, movimentoMira.y, 0);
+        }
+        else
+        {
+            // Se não houve mudança de direção, move a mira na velocidade fixa
+            Vector2 movimentoMira = ultimaDirecao * velocidade * Time.fixedDeltaTime; // Usar a última direção
+            mira.transform.position += new Vector3(movimentoMira.x, movimentoMira.y, 0);
+        }
+        
+        // Atualiza a última direção da mira
+        ultimaDirecao = novaDirecao;
     }
+    else // Se o joystick não está em movimento
+    {
+        // Não faz nada ou pode manter a mira na última direção
+        // Se desejar, você pode adicionar um comportamento aqui
+    }
+}
+
+
 
     // Método para rotacionar o personagem suavemente em direção ao joystick
     private void RotacionarPersonagem()
@@ -79,6 +111,7 @@ public class movimentar : NetworkBehaviour
             {
                 int indice = 1;
                 warriorfathertransform = jogador.transform.Find("warrior's father(Clone)");
+                mira = jogador.transform.Find("mira_0(Clone)").gameObject;
                 if(warriorfathertransform != null)
                 {
                     for(int contador=0; contador<warriorfathertransform.childCount;contador++)
@@ -103,7 +136,7 @@ public class movimentar : NetworkBehaviour
                 }
                 else
                 {
-                    movercamera();
+                    movermira();
                 }
             }
         }

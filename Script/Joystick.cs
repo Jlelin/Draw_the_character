@@ -145,7 +145,30 @@ public class Joystick : MonoBehaviour, IPointerDownHandler, IDragHandler, IPoint
             return localPoint - (background.anchorMax * baseRect.sizeDelta) + pivotOffset;
         }
         return Vector2.zero;
+
     }
+    public float Angle
+    {
+        get
+        {
+            if (input != Vector2.zero)
+            {
+                return Mathf.Atan2(input.y, input.x) * Mathf.Rad2Deg;
+            }
+            return 0;
+        }
+    }
+
+    public int GetDirection()
+    {
+        if (input.magnitude > deadZone) // Verifica se está fora da zona morta
+        {
+            float angle = Angle + 180f; // Ajusta para que 0° fique no centro
+            return Mathf.RoundToInt(angle / (360f / 128f)) % 128; // Divide em 128 direções
+        }
+        return -1; // Retorna -1 se não estiver movendo
+    }
+
 }
 
 public enum AxisOptions { Both, Horizontal, Vertical }
